@@ -186,7 +186,7 @@ QVariant KUndoModel2::data(const QModelIndex &index, int role) const
     if (role == Qt::DisplayRole) {
         if (index.row() == 0)
             return m_emty_label;
-        return m_stack->itemText(index.row() - 1);
+        return m_stack->text(index.row() - 1);
     } else if (role == Qt::DecorationRole) {
         if(!index.row() == 0) {
             const KUndoCommand2* currentCommand = m_stack->command(index.row() - 1);

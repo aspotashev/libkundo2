@@ -68,7 +68,7 @@ public:
     KUndoCommand2Private() : id(-1) {}
     QList<KUndoCommand2*> child_list;
     QString actionText;
-    QString itemText;
+    QString text;
     int id;
 };
 
@@ -79,12 +79,12 @@ class KUndoAction2 : public QAction
 {
     Q_OBJECT
 public:
-    KUndoAction2(const QString &textTemplate, const QString &emptyText, QObject *parent = 0);
+    KUndoAction2(const QString &textTemplate, const QString &defaultText, QObject *parent = 0);
 public Q_SLOTS:
-    void setActionText(const QString &text);
+    void setPrefixedText(const QString &text);
 private:
     QString m_textTemplate;
-    QString m_emptyText;
+    QString m_defaultText;
 };
 #endif // QT_NO_ACTION
 

@@ -71,10 +71,8 @@ public:
 #endif // QT_NO_ACTION
     bool canUndo() const;
     bool canRedo() const;
-    QString undoActionText() const;
-    QString undoItemText() const;
-    QString redoActionText() const;
-    QString redoItemText() const;
+    QString undoText() const;
+    QString redoText() const;
     bool isClean() const;
 
 public Q_SLOTS:
@@ -88,10 +86,8 @@ Q_SIGNALS:
     void cleanChanged(bool clean);
     void canUndoChanged(bool canUndo);
     void canRedoChanged(bool canRedo);
-    void undoActionTextChanged(const QString &undoActionText);
-    void undoItemTextChanged(const QString &undoItemText);
-    void redoActionTextChanged(const QString &redoActionText);
-    void redoItemTextChanged(const QString &redoItemText);
+    void undoTextChanged(const QString &undoActionText);
+    void redoTextChanged(const QString &redoActionText);
 
 private:
     // from QUndoGroupPrivate

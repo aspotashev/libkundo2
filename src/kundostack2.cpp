@@ -250,9 +250,9 @@ QString KUndoCommand2::actionText() const
     \sa setText(), KUndoStack2::createUndoAction(), KUndoStack2::createRedoAction()
 */
 
-QString KUndoCommand2::itemText() const
+QString KUndoCommand2::text() const
 {
-    return d->itemText;
+    return d->text;
 }
 
 /*!
@@ -266,16 +266,15 @@ QString KUndoCommand2::itemText() const
 
 void KUndoCommand2::setText(const QString &text)
 {
-    const QString theFence = QLatin1String("|-|"); // TODO: make theFence static? (see kdelibs/kdecore/localization/klocalizedstring.cpp)
-    int cdpos = text.indexOf(theFence);
+    int cdpos = text.indexOf(QLatin1Char('\n'));
     if (cdpos > 0)
     {
-        d->itemText = text.left(cdpos);
-        d->actionText = text.mid(cdpos + theFence.length());
+        d->text = text.left(cdpos);
+        d->actionText = text.mid(cdpos + 1);
     }
     else
     {
-        d->itemText = text;
+        d->text = text;
         d->actionText = text;
     }
 }
@@ -391,17 +390,17 @@ const KUndoCommand2 *KUndoCommand2::child(int index) const
 
 #ifndef QT_NO_ACTION
 
-KUndoAction2::KUndoAction2(const QString &textTemplate, const QString &emptyText, QObject *parent)
+KUndoAction2::KUndoAction2(const QString &textTemplate, const QString &defaultText, QObject *parent)
     : QAction(parent)
 {
-    m_textTemplate = textTemplate; // TODO: this leads to huge amount of duplicate strings "Undo %1", "Redo %1", "Undo command", "Redo command". How to avoid that?
-    m_emptyText = emptyText;
+    m_textTemplate = textTemplate;
+    m_defaultText = defaultText;
 }
 
-void KUndoAction2::setActionText(const QString &text)
+void KUndoAction2::setPrefixedText(const QString &text)
 {
     if (text.isEmpty())
-        setText(m_emptyText);
+        setText(m_defaultText);
     else
         setText(m_textTemplate.arg(text));
 }
@@ -421,11 +420,9 @@ void KUndoStack2::setIndex(int idx, bool clean)
         m_index = idx;
         emit indexChanged(m_index);
         emit canUndoChanged(canUndo());
-        emit undoActionTextChanged(undoActionText());
-        emit undoItemTextChanged(undoItemText());
+        emit undoTextChanged(undoText());
         emit canRedoChanged(canRedo());
-        emit redoActionTextChanged(redoActionText());
-        emit redoItemTextChanged(redoItemText());
+        emit redoTextChanged(redoText());
     }
 
     if (clean)
@@ -526,11 +523,9 @@ void KUndoStack2::clear()
 
     emit indexChanged(0);
     emit canUndoChanged(false);
-    emit undoActionTextChanged(QString());
-    emit undoItemTextChanged(QString());
+    emit undoTextChanged(QString());
     emit canRedoChanged(false);
-    emit redoActionTextChanged(QString());
-    emit redoItemTextChanged(QString());
+    emit redoTextChanged(QString());
 
     if (!was_clean)
         emit cleanChanged(true);
@@ -589,11 +584,9 @@ void KUndoStack2::push(KUndoCommand2 *cmd)
         if (!macro) {
             emit indexChanged(m_index);
             emit canUndoChanged(canUndo());
-            emit undoActionTextChanged(undoActionText());
-            emit undoItemTextChanged(undoItemText());
+            emit undoTextChanged(undoText());
             emit canRedoChanged(canRedo());
-            emit redoActionTextChanged(redoActionText());
-            emit redoItemTextChanged(redoItemText());
+            emit redoTextChanged(redoText());
         }
     } else {
         if (macro) {
@@ -801,7 +794,7 @@ bool KUndoStack2::canRedo() const
     \sa KUndoCommand2::text() redoActionText() undoItemText()
 */
 
-QString KUndoStack2::undoActionText() const
+QString KUndoStack2::undoText() const
 {
     if (!m_macro_stack.isEmpty())
         return QString();
@@ -811,47 +804,17 @@ QString KUndoStack2::undoActionText() const
 }
 
 /*!
-    Returns the text of the command which will be undone in the next call to undo().
-
-    \sa KUndoCommand2::text() redoItemText() undoActionText()
-*/
-
-QString KUndoStack2::undoItemText() const
-{
-    if (!m_macro_stack.isEmpty())
-        return QString();
-    if (m_index > 0)
-        return m_command_list.at(m_index - 1)->itemText();
-    return QString();
-}
-
-/*!
     Returns the text of the command which will be redone in the next call to redo().
 
     \sa KUndoCommand2::text() undoActionText() redoItemText()
 */
 
-QString KUndoStack2::redoActionText() const
+QString KUndoStack2::redoText() const
 {
     if (!m_macro_stack.isEmpty())
         return QString();
     if (m_index < m_command_list.size())
         return m_command_list.at(m_index)->actionText();
-    return QString();
-}
-
-/*!
-    Returns the text of the command which will be redone in the next call to redo().
-
-    \sa KUndoCommand2::text() undoItemText() redoActionText()
-*/
-
-QString KUndoStack2::redoItemText() const
-{
-    if (!m_macro_stack.isEmpty())
-        return QString();
-    if (m_index < m_command_list.size())
-        return m_command_list.at(m_index)->itemText();
     return QString();
 }
 
@@ -872,13 +835,13 @@ QString KUndoStack2::redoItemText() const
 
 QAction *KUndoStack2::createUndoAction(QObject *parent) const
 {
-    KUndoAction2 *result = new KUndoAction2(i18n("Undo %1"), i18n("Undo action"), parent);
+    KUndoAction2 *result = new KUndoAction2(i18n("Undo %1"), i18nc("Default text for undo action", "Undo"), parent);
     result->setEnabled(canUndo());
-    result->setActionText(undoActionText());
+    result->setPrefixedText(undoText());
     connect(this, SIGNAL(canUndoChanged(bool)),
             result, SLOT(setEnabled(bool)));
-    connect(this, SIGNAL(undoActionTextChanged(QString)),
-            result, SLOT(setActionText(QString)));
+    connect(this, SIGNAL(undoTextChanged(QString)),
+            result, SLOT(setPrefixedText(QString)));
     connect(result, SIGNAL(triggered()), this, SLOT(undo()));
     return result;
 }
@@ -898,13 +861,13 @@ QAction *KUndoStack2::createUndoAction(QObject *parent) const
 
 QAction *KUndoStack2::createRedoAction(QObject *parent) const
 {
-    KUndoAction2 *result = new KUndoAction2(i18n("Redo %1"), i18n("Redo action"), parent);
+    KUndoAction2 *result = new KUndoAction2(i18n("Redo %1"), i18nc("Default text for redo action", "Redo"), parent);
     result->setEnabled(canRedo());
-    result->setActionText(redoActionText());
+    result->setPrefixedText(redoText());
     connect(this, SIGNAL(canRedoChanged(bool)),
             result, SLOT(setEnabled(bool)));
-    connect(this, SIGNAL(redoActionTextChanged(QString)),
-            result, SLOT(setActionText(QString)));
+    connect(this, SIGNAL(redoTextChanged(QString)),
+            result, SLOT(setPrefixText(QString)));
     connect(result, SIGNAL(triggered()), this, SLOT(redo()));
     return result;
 }
@@ -959,11 +922,9 @@ void KUndoStack2::beginMacro(const QString &text)
 
     if (m_macro_stack.count() == 1) {
         emit canUndoChanged(false);
-        emit undoActionTextChanged(QString());
-        emit undoItemTextChanged(QString());
+        emit undoTextChanged(QString());
         emit canRedoChanged(false);
-        emit redoActionTextChanged(QString());
-        emit redoItemTextChanged(QString());
+        emit redoTextChanged(QString());
     }
 }
 
@@ -1016,24 +977,11 @@ const KUndoCommand2 *KUndoStack2::command(int index) const
     \sa beginMacro()
 */
 
-QString KUndoStack2::actionText(int idx) const
+QString KUndoStack2::text(int idx) const
 {
     if (idx < 0 || idx >= m_command_list.size())
         return QString();
-    return m_command_list.at(idx)->actionText();
-}
-
-/*!
-    Returns the text of the command at index \a idx.
-
-    \sa beginMacro()
-*/
-
-QString KUndoStack2::itemText(int idx) const
-{
-    if (idx < 0 || idx >= m_command_list.size())
-        return QString();
-    return m_command_list.at(idx)->itemText();
+    return m_command_list.at(idx)->text();
 }
 
 /*!

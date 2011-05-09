@@ -67,9 +67,8 @@ public:
     virtual void undo();
     virtual void redo();
 
-//    QString text() const;
     QString actionText() const;
-    QString itemText() const;
+    QString text() const;
     void setText(const QString &text);
 
     virtual int id() const;
@@ -103,15 +102,13 @@ public:
 
     bool canUndo() const;
     bool canRedo() const;
-    QString undoActionText() const;
-    QString undoItemText() const;
-    QString redoActionText() const;
-    QString redoItemText() const;
+    QString undoText() const;
+    QString redoText() const;
 
     int count() const;
     int index() const;
     QString actionText(int idx) const;
-    QString itemText(int idx) const;
+    QString text(int idx) const;
 
 #ifndef QT_NO_ACTION
     QAction *createUndoAction(QObject *parent) const;
@@ -142,10 +139,8 @@ Q_SIGNALS:
     void cleanChanged(bool clean);
     void canUndoChanged(bool canUndo);
     void canRedoChanged(bool canRedo);
-    void undoActionTextChanged(const QString &undoActionText);
-    void undoItemTextChanged(const QString &undoItemText);
-    void redoActionTextChanged(const QString &redoActionText);
-    void redoItemTextChanged(const QString &redoItemText);
+    void undoTextChanged(const QString &undoActionText);
+    void redoTextChanged(const QString &redoActionText);
 
 private:
     // from QUndoStackPrivate

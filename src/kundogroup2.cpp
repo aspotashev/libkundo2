@@ -178,16 +178,12 @@ void KUndoGroup2::setActiveStack(KUndoStack2 *stack)
     if (m_active != 0) {
         disconnect(m_active, SIGNAL(canUndoChanged(bool)),
                     this, SIGNAL(canUndoChanged(bool)));
-        disconnect(m_active, SIGNAL(undoActionTextChanged(QString)),
-                    this, SIGNAL(undoActionTextChanged(QString)));
-        disconnect(m_active, SIGNAL(undoItemTextChanged(QString)),
-                    this, SIGNAL(undoItemTextChanged(QString)));
+        disconnect(m_active, SIGNAL(undoTextChanged(QString)),
+                    this, SIGNAL(undoTextChanged(QString)));
         disconnect(m_active, SIGNAL(canRedoChanged(bool)),
                     this, SIGNAL(canRedoChanged(bool)));
-        disconnect(m_active, SIGNAL(redoActionTextChanged(QString)),
-                    this, SIGNAL(redoActionTextChanged(QString)));
-        disconnect(m_active, SIGNAL(redoItemTextChanged(QString)),
-                    this, SIGNAL(redoItemTextChanged(QString)));
+        disconnect(m_active, SIGNAL(redoTextChanged(QString)),
+                    this, SIGNAL(redoTextChanged(QString)));
         disconnect(m_active, SIGNAL(indexChanged(int)),
                     this, SIGNAL(indexChanged(int)));
         disconnect(m_active, SIGNAL(cleanChanged(bool)),
@@ -198,36 +194,28 @@ void KUndoGroup2::setActiveStack(KUndoStack2 *stack)
 
     if (m_active == 0) {
         emit canUndoChanged(false);
-        emit undoActionTextChanged(QString());
-        emit undoItemTextChanged(QString());
+        emit undoTextChanged(QString());
         emit canRedoChanged(false);
-        emit redoActionTextChanged(QString());
-        emit redoItemTextChanged(QString());
+        emit redoTextChanged(QString());
         emit cleanChanged(true);
         emit indexChanged(0);
     } else {
         connect(m_active, SIGNAL(canUndoChanged(bool)),
                 this, SIGNAL(canUndoChanged(bool)));
-        connect(m_active, SIGNAL(undoActionTextChanged(QString)),
-                this, SIGNAL(undoActionTextChanged(QString)));
-        connect(m_active, SIGNAL(undoItemTextChanged(QString)),
-                this, SIGNAL(undoItemTextChanged(QString)));
+        connect(m_active, SIGNAL(undoTextChanged(QString)),
+                this, SIGNAL(undoTextChanged(QString)));
         connect(m_active, SIGNAL(canRedoChanged(bool)),
                 this, SIGNAL(canRedoChanged(bool)));
-        connect(m_active, SIGNAL(redoActionTextChanged(QString)),
-                this, SIGNAL(redoActionTextChanged(QString)));
-        connect(m_active, SIGNAL(redoItemTextChanged(QString)),
-                this, SIGNAL(redoItemTextChanged(QString)));
+        connect(m_active, SIGNAL(redoTextChanged(QString)),
+                this, SIGNAL(redoTextChanged(QString)));
         connect(m_active, SIGNAL(indexChanged(int)),
                 this, SIGNAL(indexChanged(int)));
         connect(m_active, SIGNAL(cleanChanged(bool)),
                 this, SIGNAL(cleanChanged(bool)));
         emit canUndoChanged(m_active->canUndo());
-        emit undoActionTextChanged(m_active->undoActionText());
-        emit undoItemTextChanged(m_active->undoItemText());
+        emit undoTextChanged(m_active->undoText());
         emit canRedoChanged(m_active->canRedo());
-        emit redoActionTextChanged(m_active->redoActionText());
-        emit redoItemTextChanged(m_active->redoItemText());
+        emit redoTextChanged(m_active->redoText());
         emit cleanChanged(m_active->isClean());
         emit indexChanged(m_active->index());
     }
@@ -317,23 +305,9 @@ bool KUndoGroup2::canRedo() const
     \sa undoItemText() redoActionText() setActiveStack()
 */
 
-QString KUndoGroup2::undoActionText() const
+QString KUndoGroup2::undoText() const
 {
-    return m_active == 0 ? QString() : m_active->undoActionText();
-}
-
-/*!
-    Returns the value of the active stack's KUndoStack2::undoItemText().
-
-    If none of the stacks are active, or if the group is empty, this function
-    returns an empty string.
-
-    \sa undoActionText() redoItemText() setActiveStack()
-*/
-
-QString KUndoGroup2::undoItemText() const
-{
-    return m_active == 0 ? QString() : m_active->undoItemText();
+    return m_active == 0 ? QString() : m_active->undoText();
 }
 
 /*!
@@ -345,23 +319,9 @@ QString KUndoGroup2::undoItemText() const
     \sa redoItemText() undoActionText() setActiveStack()
 */
 
-QString KUndoGroup2::redoActionText() const
+QString KUndoGroup2::redoText() const
 {
-    return m_active == 0 ? QString() : m_active->redoActionText();
-}
-
-/*!
-    Returns the value of the active stack's KUndoStack2::redoItemText().
-
-    If none of the stacks are active, or if the group is empty, this function
-    returns an empty string.
-
-    \sa redoActionText() undoItemText() setActiveStack()
-*/
-
-QString KUndoGroup2::redoItemText() const
-{
-    return m_active == 0 ? QString() : m_active->redoItemText();
+    return m_active == 0 ? QString() : m_active->redoText();
 }
 
 /*!
@@ -396,13 +356,13 @@ bool KUndoGroup2::isClean() const
 
 QAction *KUndoGroup2::createUndoAction(QObject *parent) const
 {
-    KUndoAction2 *result = new KUndoAction2(i18n("Undo %1"), i18n("Undo action"), parent);
+    KUndoAction2 *result = new KUndoAction2(i18n("Undo %1"), i18nc("Default text for undo action", "Undo"), parent);
     result->setEnabled(canUndo());
-    result->setActionText(undoActionText());
+    result->setPrefixedText(undoText());
     connect(this, SIGNAL(canUndoChanged(bool)),
             result, SLOT(setEnabled(bool)));
-    connect(this, SIGNAL(undoActionTextChanged(QString)),
-            result, SLOT(setActionText(QString)));
+    connect(this, SIGNAL(undoTextChanged(QString)),
+            result, SLOT(setPrefixedText(QString)));
     connect(result, SIGNAL(triggered()), this, SLOT(undo()));
     return result;
 }
@@ -423,13 +383,13 @@ QAction *KUndoGroup2::createUndoAction(QObject *parent) const
 
 QAction *KUndoGroup2::createRedoAction(QObject *parent) const
 {
-    KUndoAction2 *result = new KUndoAction2(i18n("Redo %1"), i18n("Redo action"), parent);
+    KUndoAction2 *result = new KUndoAction2(i18n("Redo %1"), i18nc("Default text for redo action", "Redo"), parent);
     result->setEnabled(canRedo());
-    result->setActionText(redoActionText());
+    result->setPrefixedText(redoText());
     connect(this, SIGNAL(canRedoChanged(bool)),
             result, SLOT(setEnabled(bool)));
-    connect(this, SIGNAL(redoActionTextChanged(QString)),
-            result, SLOT(setActionText(QString)));
+    connect(this, SIGNAL(redoTextChanged(QString)),
+            result, SLOT(setPrefixedText(QString)));
     connect(result, SIGNAL(triggered()), this, SLOT(redo()));
     return result;
 }
