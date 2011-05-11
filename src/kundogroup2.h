@@ -45,13 +45,15 @@
 #include <QtCore/qobject.h>
 #include <QtCore/qstring.h>
 
+#include "kundo2_export.h"
+
 class KUndoGroup2Private;
 class KUndoStack2;
 class QAction;
 
 #ifndef QT_NO_UNDOGROUP
 
-class Q_GUI_EXPORT KUndoGroup2 : public QObject
+class KUNDO2_EXPORT KUndoGroup2 : public QObject
 {
     Q_OBJECT
     Q_DECLARE_PRIVATE(KUndoGroup2)

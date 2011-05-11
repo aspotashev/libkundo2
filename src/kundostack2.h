@@ -52,6 +52,7 @@
 class QAction;
 class KUndoCommand2Private;
 class KUndoGroup2;
+class KActionCollection;
 
 #ifndef QT_NO_UNDOCOMMAND
 
@@ -126,6 +127,10 @@ public:
     int undoLimit() const;
 
     const KUndoCommand2 *command(int index) const;
+
+    // functions from KUndoStack
+    QAction* createRedoAction(KActionCollection* actionCollection, const QString& actionName = QString());
+    QAction* createUndoAction(KActionCollection* actionCollection, const QString& actionName = QString());
 
 public Q_SLOTS:
     void setClean();

@@ -41,6 +41,9 @@
 
 #include <QtCore/qdebug.h>
 #include <KDE/KLocale>
+#include <kstandardaction.h>
+#include <kicon.h>
+#include <kactioncollection.h>
 #include "kundostack2.h"
 #include "kundostack2_p.h"
 #include "kundogroup2.h"
@@ -1055,6 +1058,44 @@ bool KUndoStack2::isActive() const
 #else
     return m_group == 0 || m_group->activeStack() == this;
 #endif
+}
+
+QAction* KUndoStack2::createRedoAction(KActionCollection* actionCollection, const QString& actionName)
+{
+    QAction* action = createRedoAction(actionCollection);
+
+    if(actionName.isEmpty()) {
+        action->setObjectName(KStandardAction::name(KStandardAction::Redo));
+    } else {
+        action->setObjectName(actionName);
+    }
+
+    action->setIcon(KIcon("edit-redo"));
+    action->setIconText(i18n("Redo"));
+    action->setShortcuts(KStandardShortcut::redo());
+
+    actionCollection->addAction(action->objectName(), action);
+
+    return action;
+}
+
+QAction* KUndoStack2::createUndoAction(KActionCollection* actionCollection, const QString& actionName)
+{
+    QAction* action = createUndoAction(actionCollection);
+
+    if(actionName.isEmpty()) {
+        action->setObjectName(KStandardAction::name(KStandardAction::Undo));
+    } else {
+        action->setObjectName(actionName);
+    }
+
+    action->setIcon(KIcon("edit-undo"));
+    action->setIconText(i18n("Undo"));
+    action->setShortcuts(KStandardShortcut::undo());
+
+    actionCollection->addAction(action->objectName(), action);
+
+    return action;
 }
 
 /*!
