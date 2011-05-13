@@ -17,6 +17,7 @@ target_link_libraries(kundo2
 
 install( FILES
 	kundo2stack.h
+	kundo2qstack.h
 	kundo2group.h
 	kundo2view.h
 	kundo2model.h
