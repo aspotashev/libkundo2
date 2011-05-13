@@ -164,6 +164,14 @@ private:
     friend class KUndo2Group;
 };
 
+// HACK!!! (inheritance in the wrong direction)
+// Cross your fingers that nobody feels the difference ;)
+class KUNDO2_EXPORT KUndo2QStack : public KUndo2Stack
+{
+public:
+	explicit KUndo2QStack(QObject *parent = 0);
+};
+
 #endif // QT_NO_UNDOSTACK
 
 #endif // KUNDO2STACK_H

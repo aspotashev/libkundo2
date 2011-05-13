@@ -1154,4 +1154,9 @@ QAction* KUndo2Stack::createUndoAction(KActionCollection* actionCollection, cons
     \a canRedo specifies the new value.
 */
 
+KUndo2QStack::KUndo2QStack(QObject *parent):
+	KUndo2Stack(parent)
+{
+}
+
 #endif // QT_NO_UNDOSTACK
