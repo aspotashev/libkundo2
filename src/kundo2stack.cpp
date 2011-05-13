@@ -51,37 +51,37 @@
 #ifndef QT_NO_UNDOCOMMAND
 
 /*!
-    \class KUndoCommand2
-    \brief The KUndoCommand2 class is the base class of all commands stored on a KUndoStack2.
+    \class KUndo2Command
+    \brief The KUndo2Command class is the base class of all commands stored on a KUndo2Stack.
     \since 4.2
 
     For an overview of Qt's Undo Framework, see the
     \l{Overview of Qt's Undo Framework}{overview document}.
 
-    A KUndoCommand2 represents a single editing action on a document; for example,
-    inserting or deleting a block of text in a text editor. KUndoCommand2 can apply
+    A KUndo2Command represents a single editing action on a document; for example,
+    inserting or deleting a block of text in a text editor. KUndo2Command can apply
     a change to the document with redo() and undo the change with undo(). The
     implementations for these functions must be provided in a derived class.
 
     \snippet doc/src/snippets/code/src_gui_util_qundostack.cpp 0
 
-    A KUndoCommand2 has an associated text(). This is a short string
+    A KUndo2Command has an associated text(). This is a short string
     describing what the command does. It is used to update the text
     properties of the stack's undo and redo actions; see
-    KUndoStack2::createUndoAction() and KUndoStack2::createRedoAction().
+    KUndo2Stack::createUndoAction() and KUndo2Stack::createRedoAction().
 
-    KUndoCommand2 objects are owned by the stack they were pushed on.
-    KUndoStack2 deletes a command if it has been undone and a new command is pushed. For example:
+    KUndo2Command objects are owned by the stack they were pushed on.
+    KUndo2Stack deletes a command if it has been undone and a new command is pushed. For example:
 
 \snippet doc/src/snippets/code/src_gui_util_qundostack.cpp 1
 
     In effect, when a command is pushed, it becomes the top-most command
     on the stack.
 
-    To support command compression, KUndoCommand2 has an id() and the virtual function
-    mergeWith(). These functions are used by KUndoStack2::push().
+    To support command compression, KUndo2Command has an id() and the virtual function
+    mergeWith(). These functions are used by KUndo2Stack::push().
 
-    To support command macros, a KUndoCommand2 object can have any number of child
+    To support command macros, a KUndo2Command object can have any number of child
     commands. Undoing or redoing the parent command will cause the child
     commands to be undone or redone. A command can be assigned
     to a parent explicitly in the constructor. In this case, the command
@@ -96,22 +96,22 @@
     \snippet doc/src/snippets/code/src_gui_util_qundostack.cpp 2
 
     Another way to create macros is to use the convenience functions
-    KUndoStack2::beginMacro() and KUndoStack2::endMacro().
+    KUndo2Stack::beginMacro() and KUndo2Stack::endMacro().
 
-    \sa KUndoStack2
+    \sa KUndo2Stack
 */
 
 /*!
-    Constructs a KUndoCommand2 object with the given \a parent and \a text.
+    Constructs a KUndo2Command object with the given \a parent and \a text.
 
     If \a parent is not 0, this command is appended to parent's child list.
     The parent command then owns this command and will delete it in its
     destructor.
 
-    \sa ~KUndoCommand2()
+    \sa ~KUndo2Command()
 */
 
-KUndoCommand2::KUndoCommand2(const QString &text, KUndoCommand2 *parent)
+KUndo2Command::KUndo2Command(const QString &text, KUndo2Command *parent)
 {
     d = new KUndoCommand2Private;
     if (parent != 0)
@@ -120,16 +120,16 @@ KUndoCommand2::KUndoCommand2(const QString &text, KUndoCommand2 *parent)
 }
 
 /*!
-    Constructs a KUndoCommand2 object with parent \a parent.
+    Constructs a KUndo2Command object with parent \a parent.
 
     If \a parent is not 0, this command is appended to parent's child list.
     The parent command then owns this command and will delete it in its
     destructor.
 
-    \sa ~KUndoCommand2()
+    \sa ~KUndo2Command()
 */
 
-KUndoCommand2::KUndoCommand2(KUndoCommand2 *parent)
+KUndo2Command::KUndo2Command(KUndo2Command *parent)
 {
     d = new KUndoCommand2Private;
     if (parent != 0)
@@ -137,12 +137,12 @@ KUndoCommand2::KUndoCommand2(KUndoCommand2 *parent)
 }
 
 /*!
-    Destroys the KUndoCommand2 object and all child commands.
+    Destroys the KUndo2Command object and all child commands.
 
-    \sa KUndoCommand2()
+    \sa KUndo2Command()
 */
 
-KUndoCommand2::~KUndoCommand2()
+KUndo2Command::~KUndo2Command()
 {
     qDeleteAll(d->child_list);
     delete d;
@@ -157,13 +157,13 @@ KUndoCommand2::~KUndoCommand2()
     If the command supports compression this function must be overridden in the
     derived class to return the correct ID. The base implementation returns -1.
 
-    KUndoStack2::push() will only try to merge two commands if they have the
+    KUndo2Stack::push() will only try to merge two commands if they have the
     same ID, and the ID is not -1.
 
-    \sa mergeWith(), KUndoStack2::push()
+    \sa mergeWith(), KUndo2Stack::push()
 */
 
-int KUndoCommand2::id() const
+int KUndo2Command::id() const
 {
     return -1;
 }
@@ -177,17 +177,17 @@ int KUndoCommand2::id() const
     Similarly, calling this command's undo() must have the same effect as undoing
     \a command and this command.
 
-    KUndoStack2 will only try to merge two commands if they have the same id, and
+    KUndo2Stack will only try to merge two commands if they have the same id, and
     the id is not -1.
 
     The default implementation returns false.
 
     \snippet doc/src/snippets/code/src_gui_util_qundostack.cpp 3
 
-    \sa id() KUndoStack2::push()
+    \sa id() KUndo2Stack::push()
 */
 
-bool KUndoCommand2::mergeWith(const KUndoCommand2 *command)
+bool KUndo2Command::mergeWith(const KUndo2Command *command)
 {
     Q_UNUSED(command);
     return false;
@@ -195,8 +195,8 @@ bool KUndoCommand2::mergeWith(const KUndoCommand2 *command)
 
 /*!
     Applies a change to the document. This function must be implemented in
-    the derived class. Calling KUndoStack2::push(),
-    KUndoStack2::undo() or KUndoStack2::redo() from this function leads to
+    the derived class. Calling KUndo2Stack::push(),
+    KUndo2Stack::undo() or KUndo2Stack::redo() from this function leads to
     undefined beahavior.
 
     The default implementation calls redo() on all child commands.
@@ -204,7 +204,7 @@ bool KUndoCommand2::mergeWith(const KUndoCommand2 *command)
     \sa undo()
 */
 
-void KUndoCommand2::redo()
+void KUndo2Command::redo()
 {
     for (int i = 0; i < d->child_list.size(); ++i)
         d->child_list.at(i)->redo();
@@ -213,8 +213,8 @@ void KUndoCommand2::redo()
 /*!
     Reverts a change to the document. After undo() is called, the state of
     the document should be the same as before redo() was called. This function must
-    be implemented in the derived class. Calling KUndoStack2::push(),
-    KUndoStack2::undo() or KUndoStack2::redo() from this function leads to
+    be implemented in the derived class. Calling KUndo2Stack::push(),
+    KUndo2Stack::undo() or KUndo2Stack::redo() from this function leads to
     undefined beahavior.
 
     The default implementation calls undo() on all child commands in reverse order.
@@ -222,7 +222,7 @@ void KUndoCommand2::redo()
     \sa redo()
 */
 
-void KUndoCommand2::undo()
+void KUndo2Command::undo()
 {
     for (int i = d->child_list.size() - 1; i >= 0; --i)
         d->child_list.at(i)->undo();
@@ -235,10 +235,10 @@ void KUndoCommand2::undo()
     The text is used when the text properties of the stack's undo and redo
     actions are updated.
 
-    \sa setText(), KUndoStack2::createUndoAction(), KUndoStack2::createRedoAction()
+    \sa setText(), KUndo2Stack::createUndoAction(), KUndo2Stack::createRedoAction()
 */
 
-QString KUndoCommand2::actionText() const
+QString KUndo2Command::actionText() const
 {
     return d->actionText;
 }
@@ -250,10 +250,10 @@ QString KUndoCommand2::actionText() const
     The text is used when the text properties of the stack's undo and redo
     actions are updated.
 
-    \sa setText(), KUndoStack2::createUndoAction(), KUndoStack2::createRedoAction()
+    \sa setText(), KUndo2Stack::createUndoAction(), KUndo2Stack::createRedoAction()
 */
 
-QString KUndoCommand2::text() const
+QString KUndo2Command::text() const
 {
     return d->text;
 }
@@ -264,10 +264,10 @@ QString KUndoCommand2::text() const
     The specified text should be a short user-readable string describing what this
     command does.
 
-    \sa text() KUndoStack2::createUndoAction() KUndoStack2::createRedoAction()
+    \sa text() KUndo2Stack::createUndoAction() KUndo2Stack::createRedoAction()
 */
 
-void KUndoCommand2::setText(const QString &text)
+void KUndo2Command::setText(const QString &text)
 {
     int cdpos = text.indexOf(QLatin1Char('\n'));
     if (cdpos > 0)
@@ -290,7 +290,7 @@ void KUndoCommand2::setText(const QString &text)
     \sa child()
 */
 
-int KUndoCommand2::childCount() const
+int KUndo2Command::childCount() const
 {
     return d->child_list.count();
 }
@@ -300,10 +300,10 @@ int KUndoCommand2::childCount() const
 
     Returns the child command at \a index.
 
-    \sa childCount(), KUndoStack2::command()
+    \sa childCount(), KUndo2Stack::command()
 */
 
-const KUndoCommand2 *KUndoCommand2::child(int index) const
+const KUndo2Command *KUndo2Command::child(int index) const
 {
     if (index < 0 || index >= d->child_list.count())
         return 0;
@@ -315,8 +315,8 @@ const KUndoCommand2 *KUndoCommand2::child(int index) const
 #ifndef QT_NO_UNDOSTACK
 
 /*!
-    \class KUndoStack2
-    \brief The KUndoStack2 class is a stack of KUndoCommand2 objects.
+    \class KUndo2Stack
+    \brief The KUndo2Stack class is a stack of KUndo2Command objects.
     \since 4.2
 
     For an overview of Qt's Undo Framework, see the
@@ -329,24 +329,24 @@ const KUndoCommand2 *KUndoCommand2::child(int index) const
     undone and redone using undo() and redo(), or by triggering the
     actions returned by createUndoAction() and createRedoAction().
 
-    KUndoStack2 keeps track of the \a current command. This is the command
+    KUndo2Stack keeps track of the \a current command. This is the command
     which will be executed by the next call to redo(). The index of this
     command is returned by index(). The state of the edited object can be
     rolled forward or back using setIndex(). If the top-most command on the
     stack has already been redone, index() is equal to count().
 
-    KUndoStack2 provides support for undo and redo actions, command
+    KUndo2Stack provides support for undo and redo actions, command
     compression, command macros, and supports the concept of a
     \e{clean state}.
 
     \section1 Undo and Redo Actions
 
-    KUndoStack2 provides convenient undo and redo QAction objects, which
+    KUndo2Stack provides convenient undo and redo QAction objects, which
     can be inserted into a menu or a toolbar. When commands are undone or
-    redone, KUndoStack2 updates the text properties of these actions
+    redone, KUndo2Stack updates the text properties of these actions
     to reflect what change they will trigger. The actions are also disabled
     when no command is available for undo or redo. These actions
-    are returned by KUndoStack2::createUndoAction() and KUndoStack2::createRedoAction().
+    are returned by KUndo2Stack::createUndoAction() and KUndo2Stack::createRedoAction().
 
     \section1 Command Compression and Macros
 
@@ -358,14 +358,14 @@ const KUndoCommand2 *KUndoCommand2::child(int index) const
     to undo or redo typing of whole words, sentences, or paragraphs.
     Command compression allows these single-character commands to be merged
     into a single command which inserts or deletes sections of text.
-    For more information, see KUndoCommand2::mergeWith() and push().
+    For more information, see KUndo2Command::mergeWith() and push().
 
     A command macro is a sequence of commands, all of which are undone and
     redone in one go. Command macros are created by giving a command a list
     of child commands.
     Undoing or redoing the parent command will cause the child commands to
     be undone or redone. Command macros may be created explicitly
-    by specifying a parent in the KUndoCommand2 constructor, or by using the
+    by specifying a parent in the KUndo2Command constructor, or by using the
     convenience functions beginMacro() and endMacro().
 
     Although command compression and macros appear to have the same effect to the
@@ -379,7 +379,7 @@ const KUndoCommand2 *KUndoCommand2::child(int index) const
 
     \section1 Clean State
 
-    KUndoStack2 supports the concept of a clean state. When the
+    KUndo2Stack supports the concept of a clean state. When the
     document is saved to disk, the stack can be marked as clean using
     setClean(). Whenever the stack returns to this state through undoing and
     redoing commands, it emits the signal cleanChanged(). This signal
@@ -388,7 +388,7 @@ const KUndoCommand2 *KUndoCommand2::child(int index) const
     and to update the document's title to reflect that it contains unsaved
     changes.
 
-    \sa KUndoCommand2, KUndoView2
+    \sa KUndo2Command, KUndo2View
 */
 
 #ifndef QT_NO_ACTION
@@ -415,7 +415,7 @@ void KUndoAction2::setPrefixedText(const QString &text)
     makes \a idx the clean index as well.
 */
 
-void KUndoStack2::setIndex(int idx, bool clean)
+void KUndo2Stack::setIndex(int idx, bool clean)
 {
     bool was_clean = m_index == m_clean_index;
 
@@ -443,7 +443,7 @@ void KUndoStack2::setIndex(int idx, bool clean)
     Returns true if commands were deleted.
 */
 
-bool KUndoStack2::checkUndoLimit()
+bool KUndo2Stack::checkUndoLimit()
 {
     if (m_undo_limit <= 0 || !m_macro_stack.isEmpty() || m_undo_limit >= m_command_list.count())
         return false;
@@ -467,28 +467,28 @@ bool KUndoStack2::checkUndoLimit()
 /*!
     Constructs an empty undo stack with the parent \a parent. The
     stack will initially be in the clean state. If \a parent is a
-    KUndoGroup2 object, the stack is automatically added to the group.
+    KUndo2Group object, the stack is automatically added to the group.
 
     \sa push()
 */
 
-KUndoStack2::KUndoStack2(QObject *parent)
+KUndo2Stack::KUndo2Stack(QObject *parent)
     : QObject(parent), m_index(0), m_clean_index(0), m_group(0), m_undo_limit(0)
 {
 #ifndef QT_NO_UNDOGROUP
-    if (KUndoGroup2 *group = qobject_cast<KUndoGroup2*>(parent))
+    if (KUndo2Group *group = qobject_cast<KUndo2Group*>(parent))
         group->addStack(this);
 #endif
 }
 
 /*!
     Destroys the undo stack, deleting any commands that are on it. If the
-    stack is in a KUndoGroup2, the stack is automatically removed from the group.
+    stack is in a KUndo2Group, the stack is automatically removed from the group.
 
-    \sa KUndoStack2()
+    \sa KUndo2Stack()
 */
 
-KUndoStack2::~KUndoStack2()
+KUndo2Stack::~KUndo2Stack()
 {
 #ifndef QT_NO_UNDOGROUP
     if (m_group != 0)
@@ -507,10 +507,10 @@ KUndoStack2::~KUndoStack2()
     This function is usually used when the contents of the document are
     abandoned.
 
-    \sa KUndoStack2()
+    \sa KUndo2Stack()
 */
 
-void KUndoStack2::clear()
+void KUndo2Stack::clear()
 {
     if (m_command_list.isEmpty())
         return;
@@ -539,9 +539,9 @@ void KUndoStack2::clear()
     In either case, executes \a cmd by calling its redo() function.
 
     If \a cmd's id is not -1, and if the id is the same as that of the
-    most recently executed command, KUndoStack2 will attempt to merge the two
-    commands by calling KUndoCommand2::mergeWith() on the most recently executed
-    command. If KUndoCommand2::mergeWith() returns true, \a cmd is deleted.
+    most recently executed command, KUndo2Stack will attempt to merge the two
+    commands by calling KUndo2Command::mergeWith() on the most recently executed
+    command. If KUndo2Command::mergeWith() returns true, \a cmd is deleted.
 
     In all other cases \a cmd is simply pushed on the stack.
 
@@ -554,18 +554,18 @@ void KUndoStack2::clear()
     been executed will almost always lead to corruption of the document's
     state.
 
-    \sa KUndoCommand2::id() KUndoCommand2::mergeWith()
+    \sa KUndo2Command::id() KUndo2Command::mergeWith()
 */
 
-void KUndoStack2::push(KUndoCommand2 *cmd)
+void KUndo2Stack::push(KUndo2Command *cmd)
 {
     cmd->redo();
 
     bool macro = !m_macro_stack.isEmpty();
 
-    KUndoCommand2 *cur = 0;
+    KUndo2Command *cur = 0;
     if (macro) {
-        KUndoCommand2 *macro_cmd = m_macro_stack.last();
+        KUndo2Command *macro_cmd = m_macro_stack.last();
         if (!macro_cmd->d->child_list.isEmpty())
             cur = macro_cmd->d->child_list.last();
     } else {
@@ -613,10 +613,10 @@ void KUndoStack2::push(KUndoCommand2 *cmd)
     \sa isClean(), cleanIndex()
 */
 
-void KUndoStack2::setClean()
+void KUndo2Stack::setClean()
 {
     if (!m_macro_stack.isEmpty()) {
-        qWarning("KUndoStack2::setClean(): cannot set clean in the middle of a macro");
+        qWarning("KUndo2Stack::setClean(): cannot set clean in the middle of a macro");
         return;
     }
 
@@ -629,7 +629,7 @@ void KUndoStack2::setClean()
     \sa setClean() cleanIndex()
 */
 
-bool KUndoStack2::isClean() const
+bool KUndo2Stack::isClean() const
 {
     if (!m_macro_stack.isEmpty())
         return false;
@@ -647,13 +647,13 @@ bool KUndoStack2::isClean() const
     \sa isClean() setClean()
 */
 
-int KUndoStack2::cleanIndex() const
+int KUndo2Stack::cleanIndex() const
 {
     return m_clean_index;
 }
 
 /*!
-    Undoes the command below the current command by calling KUndoCommand2::undo().
+    Undoes the command below the current command by calling KUndo2Command::undo().
     Decrements the current command index.
 
     If the stack is empty, or if the bottom command on the stack has already been
@@ -662,13 +662,13 @@ int KUndoStack2::cleanIndex() const
     \sa redo() index()
 */
 
-void KUndoStack2::undo()
+void KUndo2Stack::undo()
 {
     if (m_index == 0)
         return;
 
     if (!m_macro_stack.isEmpty()) {
-        qWarning("KUndoStack2::undo(): cannot undo in the middle of a macro");
+        qWarning("KUndo2Stack::undo(): cannot undo in the middle of a macro");
         return;
     }
 
@@ -678,7 +678,7 @@ void KUndoStack2::undo()
 }
 
 /*!
-    Redoes the current command by calling KUndoCommand2::redo(). Increments the current
+    Redoes the current command by calling KUndo2Command::redo(). Increments the current
     command index.
 
     If the stack is empty, or if the top command on the stack has already been
@@ -687,13 +687,13 @@ void KUndoStack2::undo()
     \sa undo() index()
 */
 
-void KUndoStack2::redo()
+void KUndo2Stack::redo()
 {
     if (m_index == m_command_list.size())
         return;
 
     if (!m_macro_stack.isEmpty()) {
-        qWarning("KUndoStack2::redo(): cannot redo in the middle of a macro");
+        qWarning("KUndo2Stack::redo(): cannot redo in the middle of a macro");
         return;
     }
 
@@ -708,7 +708,7 @@ void KUndoStack2::redo()
     \sa index() setIndex() command()
 */
 
-int KUndoStack2::count() const
+int KUndo2Stack::count() const
 {
     return m_command_list.size();
 }
@@ -721,7 +721,7 @@ int KUndoStack2::count() const
     \sa undo() redo() count()
 */
 
-int KUndoStack2::index() const
+int KUndo2Stack::index() const
 {
     return m_index;
 }
@@ -734,10 +734,10 @@ int KUndoStack2::index() const
     \sa index() count() undo() redo()
 */
 
-void KUndoStack2::setIndex(int idx)
+void KUndo2Stack::setIndex(int idx)
 {
     if (!m_macro_stack.isEmpty()) {
-        qWarning("KUndoStack2::setIndex(): cannot set index in the middle of a macro");
+        qWarning("KUndo2Stack::setIndex(): cannot set index in the middle of a macro");
         return;
     }
 
@@ -766,7 +766,7 @@ void KUndoStack2::setIndex(int idx)
     \sa index() canRedo()
 */
 
-bool KUndoStack2::canUndo() const
+bool KUndo2Stack::canUndo() const
 {
     if (!m_macro_stack.isEmpty())
         return false;
@@ -784,7 +784,7 @@ bool KUndoStack2::canUndo() const
     \sa index() canUndo()
 */
 
-bool KUndoStack2::canRedo() const
+bool KUndo2Stack::canRedo() const
 {
     if (!m_macro_stack.isEmpty())
         return false;
@@ -794,10 +794,10 @@ bool KUndoStack2::canRedo() const
 /*!
     Returns the text of the command which will be undone in the next call to undo().
 
-    \sa KUndoCommand2::text() redoActionText() undoItemText()
+    \sa KUndo2Command::text() redoActionText() undoItemText()
 */
 
-QString KUndoStack2::undoText() const
+QString KUndo2Stack::undoText() const
 {
     if (!m_macro_stack.isEmpty())
         return QString();
@@ -809,10 +809,10 @@ QString KUndoStack2::undoText() const
 /*!
     Returns the text of the command which will be redone in the next call to redo().
 
-    \sa KUndoCommand2::text() undoActionText() redoItemText()
+    \sa KUndo2Command::text() undoActionText() redoItemText()
 */
 
-QString KUndoStack2::redoText() const
+QString KUndo2Stack::redoText() const
 {
     if (!m_macro_stack.isEmpty())
         return QString();
@@ -833,10 +833,10 @@ QString KUndoStack2::redoText() const
 
     If \a prefix is empty, the default prefix "Undo" is used.
 
-    \sa createRedoAction(), canUndo(), KUndoCommand2::text()
+    \sa createRedoAction(), canUndo(), KUndo2Command::text()
 */
 
-QAction *KUndoStack2::createUndoAction(QObject *parent) const
+QAction *KUndo2Stack::createUndoAction(QObject *parent) const
 {
     KUndoAction2 *result = new KUndoAction2(i18n("Undo %1"), i18nc("Default text for undo action", "Undo"), parent);
     result->setEnabled(canUndo());
@@ -859,10 +859,10 @@ QAction *KUndoStack2::createUndoAction(QObject *parent) const
 
     If \a prefix is empty, the default prefix "Redo" is used.
 
-    \sa createUndoAction(), canRedo(), KUndoCommand2::text()
+    \sa createUndoAction(), canRedo(), KUndo2Command::text()
 */
 
-QAction *KUndoStack2::createRedoAction(QObject *parent) const
+QAction *KUndo2Stack::createRedoAction(QObject *parent) const
 {
     KUndoAction2 *result = new KUndoAction2(i18n("Redo %1"), i18nc("Default text for redo action", "Redo"), parent);
     result->setEnabled(canRedo());
@@ -907,9 +907,9 @@ QAction *KUndoStack2::createRedoAction(QObject *parent) const
     \sa endMacro()
 */
 
-void KUndoStack2::beginMacro(const QString &text)
+void KUndo2Stack::beginMacro(const QString &text)
 {
-    KUndoCommand2 *cmd = new KUndoCommand2();
+    KUndo2Command *cmd = new KUndo2Command();
     cmd->setText(text);
 
     if (m_macro_stack.isEmpty()) {
@@ -940,10 +940,10 @@ void KUndoStack2::beginMacro(const QString &text)
     \sa beginMacro()
 */
 
-void KUndoStack2::endMacro()
+void KUndo2Stack::endMacro()
 {
     if (m_macro_stack.isEmpty()) {
-        qWarning("KUndoStack2::endMacro(): no matching beginMacro()");
+        qWarning("KUndo2Stack::endMacro(): no matching beginMacro()");
         return;
     }
 
@@ -965,9 +965,9 @@ void KUndoStack2::endMacro()
   causes corruption of the state of the document, if the command is 
   later undone or redone.
 
-  \sa KUndoCommand2::child()
+  \sa KUndo2Command::child()
 */
-const KUndoCommand2 *KUndoStack2::command(int index) const
+const KUndo2Command *KUndo2Stack::command(int index) const
 {
     if (index < 0 || index >= m_command_list.count())
         return 0;
@@ -980,7 +980,7 @@ const KUndoCommand2 *KUndoStack2::command(int index) const
     \sa beginMacro()
 */
 
-QString KUndoStack2::text(int idx) const
+QString KUndo2Stack::text(int idx) const
 {
     if (idx < 0 || idx >= m_command_list.size())
         return QString();
@@ -988,7 +988,7 @@ QString KUndoStack2::text(int idx) const
 }
 
 /*!
-    \property KUndoStack2::undoLimit
+    \property KUndo2Stack::undoLimit
     \brief the maximum number of commands on this stack.
     \since 4.3
 
@@ -1002,10 +1002,10 @@ QString KUndoStack2::text(int idx) const
     on a non-empty stack prints a warning and does nothing.
 */
 
-void KUndoStack2::setUndoLimit(int limit)
+void KUndo2Stack::setUndoLimit(int limit)
 {
     if (!m_command_list.isEmpty()) {
-        qWarning("KUndoStack2::setUndoLimit(): an undo limit can only be set when the stack is empty");
+        qWarning("KUndo2Stack::setUndoLimit(): an undo limit can only be set when the stack is empty");
         return;
     }
 
@@ -1015,29 +1015,29 @@ void KUndoStack2::setUndoLimit(int limit)
     checkUndoLimit();
 }
 
-int KUndoStack2::undoLimit() const
+int KUndo2Stack::undoLimit() const
 {
     return m_undo_limit;
 }
 
 /*!
-    \property KUndoStack2::active
+    \property KUndo2Stack::active
     \brief the active status of this stack.
 
     An application often has multiple undo stacks, one for each opened document. The active
     stack is the one associated with the currently active document. If the stack belongs
-    to a KUndoGroup2, calls to KUndoGroup2::undo() or KUndoGroup2::redo() will be forwarded
-    to this stack when it is active. If the KUndoGroup2 is watched by a KUndoView2, the view
+    to a KUndo2Group, calls to KUndo2Group::undo() or KUndo2Group::redo() will be forwarded
+    to this stack when it is active. If the KUndo2Group is watched by a KUndo2View, the view
     will display the contents of this stack when it is active. If the stack does not belong to
-    a KUndoGroup2, making it active has no effect.
+    a KUndo2Group, making it active has no effect.
 
     It is the programmer's responsibility to specify which stack is active by
     calling setActive(), usually when the associated document window receives focus.
 
-    \sa KUndoGroup2
+    \sa KUndo2Group
 */
 
-void KUndoStack2::setActive(bool active)
+void KUndo2Stack::setActive(bool active)
 {
 #ifdef QT_NO_UNDOGROUP
     Q_UNUSED(active);
@@ -1051,7 +1051,7 @@ void KUndoStack2::setActive(bool active)
 #endif
 }
 
-bool KUndoStack2::isActive() const
+bool KUndo2Stack::isActive() const
 {
 #ifdef QT_NO_UNDOGROUP
     return true;
@@ -1060,7 +1060,7 @@ bool KUndoStack2::isActive() const
 #endif
 }
 
-QAction* KUndoStack2::createRedoAction(KActionCollection* actionCollection, const QString& actionName)
+QAction* KUndo2Stack::createRedoAction(KActionCollection* actionCollection, const QString& actionName)
 {
     QAction* action = createRedoAction(actionCollection);
 
@@ -1079,7 +1079,7 @@ QAction* KUndoStack2::createRedoAction(KActionCollection* actionCollection, cons
     return action;
 }
 
-QAction* KUndoStack2::createUndoAction(KActionCollection* actionCollection, const QString& actionName)
+QAction* KUndo2Stack::createUndoAction(KActionCollection* actionCollection, const QString& actionName)
 {
     QAction* action = createUndoAction(actionCollection);
 
@@ -1099,7 +1099,7 @@ QAction* KUndoStack2::createUndoAction(KActionCollection* actionCollection, cons
 }
 
 /*!
-    \fn void KUndoStack2::indexChanged(int idx)
+    \fn void KUndo2Stack::indexChanged(int idx)
 
     This signal is emitted whenever a command modifies the state of the document.
     This happens when a command is undone or redone. When a macro
@@ -1113,7 +1113,7 @@ QAction* KUndoStack2::createUndoAction(KActionCollection* actionCollection, cons
 */
 
 /*!
-    \fn void KUndoStack2::cleanChanged(bool clean)
+    \fn void KUndo2Stack::cleanChanged(bool clean)
 
     This signal is emitted whenever the stack enters or leaves the clean state.
     If \a clean is true, the stack is in a clean state; otherwise this signal
@@ -1123,7 +1123,7 @@ QAction* KUndoStack2::createUndoAction(KActionCollection* actionCollection, cons
 */
 
 /*!
-    \fn void KUndoStack2::undoTextChanged(const QString &undoText)
+    \fn void KUndo2Stack::undoTextChanged(const QString &undoText)
 
     This signal is emitted whenever the value of undoText() changes. It is
     used to update the text property of the undo action returned by createUndoAction().
@@ -1131,7 +1131,7 @@ QAction* KUndoStack2::createUndoAction(KActionCollection* actionCollection, cons
 */
 
 /*!
-    \fn void KUndoStack2::canUndoChanged(bool canUndo)
+    \fn void KUndo2Stack::canUndoChanged(bool canUndo)
 
     This signal is emitted whenever the value of canUndo() changes. It is
     used to enable or disable the undo action returned by createUndoAction().
@@ -1139,7 +1139,7 @@ QAction* KUndoStack2::createUndoAction(KActionCollection* actionCollection, cons
 */
 
 /*!
-    \fn void KUndoStack2::redoTextChanged(const QString &redoText)
+    \fn void KUndo2Stack::redoTextChanged(const QString &redoText)
 
     This signal is emitted whenever the value of redoText() changes. It is
     used to update the text property of the redo action returned by createRedoAction().
@@ -1147,7 +1147,7 @@ QAction* KUndoStack2::createUndoAction(KActionCollection* actionCollection, cons
 */
 
 /*!
-    \fn void KUndoStack2::canRedoChanged(bool canRedo)
+    \fn void KUndo2Stack::canRedoChanged(bool canRedo)
 
     This signal is emitted whenever the value of canRedo() changes. It is
     used to enable or disable the redo action returned by createRedoAction().

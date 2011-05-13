@@ -48,8 +48,8 @@
 
 #include "kundostack2.h"
 
-class KUndoCommand2;
-class KUndoGroup2;
+class KUndo2Command;
+class KUndo2Group;
 
 //
 //  W A R N I N G
@@ -66,7 +66,7 @@ class KUndoCommand2Private
 {
 public:
     KUndoCommand2Private() : id(-1) {}
-    QList<KUndoCommand2*> child_list;
+    QList<KUndo2Command*> child_list;
     QString actionText;
     QString text;
     int id;

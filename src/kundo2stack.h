@@ -51,19 +51,19 @@
 
 class QAction;
 class KUndoCommand2Private;
-class KUndoGroup2;
+class KUndo2Group;
 class KActionCollection;
 
 #ifndef QT_NO_UNDOCOMMAND
 
-class KUNDO2_EXPORT KUndoCommand2
+class KUNDO2_EXPORT KUndo2Command
 {
     KUndoCommand2Private *d;
 
 public:
-    explicit KUndoCommand2(KUndoCommand2 *parent = 0);
-    explicit KUndoCommand2(const QString &text, KUndoCommand2 *parent = 0);
-    virtual ~KUndoCommand2();
+    explicit KUndo2Command(KUndo2Command *parent = 0);
+    explicit KUndo2Command(const QString &text, KUndo2Command *parent = 0);
+    virtual ~KUndo2Command();
 
     virtual void undo();
     virtual void redo();
@@ -73,33 +73,33 @@ public:
     void setText(const QString &text);
 
     virtual int id() const;
-    virtual bool mergeWith(const KUndoCommand2 *other);
+    virtual bool mergeWith(const KUndo2Command *other);
 
     int childCount() const;
-    const KUndoCommand2 *child(int index) const;
+    const KUndo2Command *child(int index) const;
 
 private:
-    Q_DISABLE_COPY(KUndoCommand2)
-    friend class KUndoStack2;
+    Q_DISABLE_COPY(KUndo2Command)
+    friend class KUndo2Stack;
 };
 
 #endif // QT_NO_UNDOCOMMAND
 
 #ifndef QT_NO_UNDOSTACK
 
-class KUNDO2_EXPORT KUndoStack2 : public QObject
+class KUNDO2_EXPORT KUndo2Stack : public QObject
 {
     Q_OBJECT
-//    Q_DECLARE_PRIVATE(KUndoStack2)
+//    Q_DECLARE_PRIVATE(KUndo2Stack)
     Q_PROPERTY(bool active READ isActive WRITE setActive)
     Q_PROPERTY(int undoLimit READ undoLimit WRITE setUndoLimit)
 
 public:
-    explicit KUndoStack2(QObject *parent = 0);
-    ~KUndoStack2();
+    explicit KUndo2Stack(QObject *parent = 0);
+    ~KUndo2Stack();
     void clear();
 
-    void push(KUndoCommand2 *cmd);
+    void push(KUndo2Command *cmd);
 
     bool canUndo() const;
     bool canRedo() const;
@@ -126,7 +126,7 @@ public:
     void setUndoLimit(int limit);
     int undoLimit() const;
 
-    const KUndoCommand2 *command(int index) const;
+    const KUndo2Command *command(int index) const;
 
     // functions from KUndoStack
     QAction* createRedoAction(KActionCollection* actionCollection, const QString& actionName = QString());
@@ -149,19 +149,19 @@ Q_SIGNALS:
 
 private:
     // from QUndoStackPrivate
-    QList<KUndoCommand2*> m_command_list;
-    QList<KUndoCommand2*> m_macro_stack;
+    QList<KUndo2Command*> m_command_list;
+    QList<KUndo2Command*> m_macro_stack;
     int m_index;
     int m_clean_index;
-    KUndoGroup2 *m_group;
+    KUndo2Group *m_group;
     int m_undo_limit;
 
     // also from QUndoStackPrivate
     void setIndex(int idx, bool clean);
     bool checkUndoLimit();
 
-    Q_DISABLE_COPY(KUndoStack2)
-    friend class KUndoGroup2;
+    Q_DISABLE_COPY(KUndo2Stack)
+    friend class KUndo2Group;
 };
 
 #endif // QT_NO_UNDOSTACK

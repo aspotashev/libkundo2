@@ -73,12 +73,12 @@ QItemSelectionModel *KUndoModel2::selectionModel() const
     return m_sel_model;
 }
 
-KUndoStack2 *KUndoModel2::stack() const
+KUndo2Stack *KUndoModel2::stack() const
 {
     return m_stack;
 }
 
-void KUndoModel2::setStack(KUndoStack2 *stack)
+void KUndoModel2::setStack(KUndo2Stack *stack)
 {
     if (m_stack == stack)
         return;
@@ -189,7 +189,7 @@ QVariant KUndoModel2::data(const QModelIndex &index, int role) const
         return m_stack->text(index.row() - 1);
     } else if (role == Qt::DecorationRole) {
         if(!index.row() == 0) {
-            const KUndoCommand2* currentCommand = m_stack->command(index.row() - 1);
+            const KUndo2Command* currentCommand = m_stack->command(index.row() - 1);
             return imageMap[currentCommand];
         }
     }
@@ -228,20 +228,20 @@ QIcon KUndoModel2::cleanIcon() const
         return;
     }
 
-    const KUndoCommand2* currentCommand = m_stack->command(idx-1);
+    const KUndo2Command* currentCommand = m_stack->command(idx-1);
     if( m_stack->count() == idx && !imageMap.contains(currentCommand)) {
         KisImageWSP historyImage = m_canvas->view()->image();
         KisPaintDeviceSP paintDevice = historyImage->projection();
         QImage image = paintDevice->createThumbnail(32, 32);
         imageMap[currentCommand] = image;
     }
-    QList<const KUndoCommand2*> list;
+    QList<const KUndo2Command*> list;
 
     for(int i = 0; i < m_stack->count(); ++i) {
         list << m_stack->command(i);
     }
 
-    for(QMap<const KUndoCommand2*, QImage>:: iterator it = imageMap.begin(); it != imageMap.end();)
+    for(QMap<const KUndo2Command*, QImage>:: iterator it = imageMap.begin(); it != imageMap.end();)
     {
         if(!list.contains(it.key())) {
             it = imageMap.erase(it);

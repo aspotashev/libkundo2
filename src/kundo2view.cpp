@@ -70,22 +70,22 @@
 
 
 /*!
-    \class KUndoView2
-    \brief The KUndoView2 class displays the contents of a KUndoStack2.
+    \class KUndo2View
+    \brief The KUndo2View class displays the contents of a KUndo2Stack.
     \since 4.2
 
     \ingroup advanced
 
-    KUndoView2 is a QListView which displays the list of commands pushed on an undo stack.
+    KUndo2View is a QListView which displays the list of commands pushed on an undo stack.
     The most recently executed command is always selected. Selecting a different command
-    results in a call to KUndoStack2::setIndex(), rolling the state of the document
+    results in a call to KUndo2Stack::setIndex(), rolling the state of the document
     backwards or forward to the new command.
 
     The stack can be set explicitly with setStack(). Alternatively, a QUndoGroup object can
     be set with setGroup(). The view will then update itself automatically whenever the
     active stack of the group changes.
 
-    \image KUndoView2.png
+    \image KUndo2View.png
 */
 
 class KUndoView2Private
@@ -98,15 +98,15 @@ public:
         model(0) {}
 
 #ifndef QT_NO_UNDOGROUP
-    QPointer<KUndoGroup2> group;
+    QPointer<KUndo2Group> group;
 #endif
     KUndoModel2 *model;
-    KUndoView2* q;
+    KUndo2View* q;
 
-    void init(KUndoView2* view);
+    void init(KUndo2View* view);
 };
 
-void KUndoView2Private::init(KUndoView2* view)
+void KUndoView2Private::init(KUndo2View* view)
 {
     q = view;
     model = new KUndoModel2(q);
@@ -118,7 +118,7 @@ void KUndoView2Private::init(KUndoView2* view)
     Constructs a new view with parent \a parent.
 */
 
-KUndoView2::KUndoView2(QWidget *parent) : QListView(parent), d(new KUndoView2Private)
+KUndo2View::KUndo2View(QWidget *parent) : QListView(parent), d(new KUndoView2Private)
 {
     d->init(this);
 }
@@ -127,7 +127,7 @@ KUndoView2::KUndoView2(QWidget *parent) : QListView(parent), d(new KUndoView2Pri
     Constructs a new view with parent \a parent and sets the observed stack to \a stack.
 */
 
-KUndoView2::KUndoView2(KUndoStack2 *stack, QWidget *parent) : QListView(parent), d(new KUndoView2Private)
+KUndo2View::KUndo2View(KUndo2Stack *stack, QWidget *parent) : QListView(parent), d(new KUndoView2Private)
 {
     d->init(this);
     setStack(stack);
@@ -141,7 +141,7 @@ KUndoView2::KUndoView2(KUndoStack2 *stack, QWidget *parent) : QListView(parent),
     The view will update itself autmiatically whenever the active stack of the group changes.
 */
 
-KUndoView2::KUndoView2(KUndoGroup2 *group, QWidget *parent) : QListView(parent), d(new KUndoView2Private)
+KUndo2View::KUndo2View(KUndo2Group *group, QWidget *parent) : QListView(parent), d(new KUndoView2Private)
 {
     d->init(this);
     setGroup(group);
@@ -153,7 +153,7 @@ KUndoView2::KUndoView2(KUndoGroup2 *group, QWidget *parent) : QListView(parent),
     Destroys this view.
 */
 
-KUndoView2::~KUndoView2() {
+KUndo2View::~KUndo2View() {
 
 }
 
@@ -164,7 +164,7 @@ KUndoView2::~KUndoView2() {
     \sa setStack() setGroup()
 */
 
-KUndoStack2 *KUndoView2::stack() const
+KUndo2Stack *KUndo2View::stack() const
 {
 
     return d->model->stack();
@@ -179,7 +179,7 @@ KUndoStack2 *KUndoView2::stack() const
     \sa stack() setGroup()
 */
 
-void KUndoView2::setStack(KUndoStack2 *stack)
+void KUndo2View::setStack(KUndo2Stack *stack)
 {
 
 #ifndef QT_NO_UNDOGROUP
@@ -199,7 +199,7 @@ void KUndoView2::setStack(KUndoStack2 *stack)
     \sa group() setStack()
 */
 
-void KUndoView2::setGroup(KUndoGroup2 *group)
+void KUndo2View::setGroup(KUndo2Group *group)
 {
 
 
@@ -207,16 +207,16 @@ void KUndoView2::setGroup(KUndoGroup2 *group)
         return;
 
     if (d->group != 0) {
-        disconnect(d->group, SIGNAL(activeStackChanged(KUndoStack2*)),
-                d->model, SLOT(setStack(KUndoStack2*)));
+        disconnect(d->group, SIGNAL(activeStackChanged(KUndo2Stack*)),
+                d->model, SLOT(setStack(KUndo2Stack*)));
     }
 
     d->group = group;
 
     if (d->group != 0) {
-        connect(d->group, SIGNAL(activeStackChanged(KUndoStack2*)),
-                d->model, SLOT(setStack(KUndoStack2*)));
-        d->model->setStack((KUndoStack2 *)d->group->activeStack());
+        connect(d->group, SIGNAL(activeStackChanged(KUndo2Stack*)),
+                d->model, SLOT(setStack(KUndo2Stack*)));
+        d->model->setStack((KUndo2Stack *)d->group->activeStack());
     } else {
         d->model->setStack(0);
     }
@@ -230,7 +230,7 @@ void KUndoView2::setGroup(KUndoGroup2 *group)
     \sa setGroup() setStack()
 */
 
-KUndoGroup2 *KUndoView2::group() const
+KUndo2Group *KUndo2View::group() const
 {
 
     return d->group;
@@ -239,7 +239,7 @@ KUndoGroup2 *KUndoView2::group() const
 #endif // QT_NO_UNDOGROUP
 
 /*!
-    \property KUndoView2::emptyLabel
+    \property KUndo2View::emptyLabel
     \brief the label used for the empty state.
 
     The empty label is the topmost element in the list of commands, which represents
@@ -247,42 +247,42 @@ KUndoGroup2 *KUndoView2::group() const
     is the string "<empty>".
 */
 
-void KUndoView2::setEmptyLabel(const QString &label)
+void KUndo2View::setEmptyLabel(const QString &label)
 {
 
     d->model->setEmptyLabel(label);
 }
 
-QString KUndoView2::emptyLabel() const
+QString KUndo2View::emptyLabel() const
 {
 
     return d->model->emptyLabel();
 }
 
 /*!
-    \property KUndoView2::cleanIcon
+    \property KUndo2View::cleanIcon
     \brief the icon used to represent the clean state.
 
-    A stack may have a clean state set with KUndoStack2::setClean(). This is usually
-    the state of the document at the point it was saved. KUndoView2 can display an
+    A stack may have a clean state set with KUndo2Stack::setClean(). This is usually
+    the state of the document at the point it was saved. KUndo2View can display an
     icon in the list of commands to show the clean state. If this property is
     a null icon, no icon is shown. The default value is the null icon.
 */
 
-void KUndoView2::setCleanIcon(const QIcon &icon)
+void KUndo2View::setCleanIcon(const QIcon &icon)
 {
 
     d->model->setCleanIcon(icon);
 
 }
 
-QIcon KUndoView2::cleanIcon() const
+QIcon KUndo2View::cleanIcon() const
 {
 
     return d->model->cleanIcon();
 }
 
-//void KUndoView2::setCanvas(KisCanvas2 *canvas) {
+//void KUndo2View::setCanvas(KisCanvas2 *canvas) {
 //    d->model->setCanvas(canvas);
 //}
 

@@ -68,27 +68,27 @@
 #ifndef QT_NO_UNDOVIEW
 
 class KUndoView2Private;
-class KUndoStack2;
-class KUndoGroup2;
+class KUndo2Stack;
+class KUndo2Group;
 class QIcon;
 
-class KUNDO2_EXPORT KUndoView2 : public QListView
+class KUNDO2_EXPORT KUndo2View : public QListView
 {
     Q_OBJECT
     Q_PROPERTY(QString emptyLabel READ emptyLabel WRITE setEmptyLabel)
     Q_PROPERTY(QIcon cleanIcon READ cleanIcon WRITE setCleanIcon)
 
 public:
-    explicit KUndoView2(QWidget *parent = 0);
-    explicit KUndoView2(KUndoStack2 *stack, QWidget *parent = 0);
+    explicit KUndo2View(QWidget *parent = 0);
+    explicit KUndo2View(KUndo2Stack *stack, QWidget *parent = 0);
 #ifndef QT_NO_UNDOGROUP
-    explicit KUndoView2(KUndoGroup2 *group, QWidget *parent = 0);
+    explicit KUndo2View(KUndo2Group *group, QWidget *parent = 0);
 #endif
-    ~KUndoView2();
+    ~KUndo2View();
 
-    KUndoStack2 *stack() const;
+    KUndo2Stack *stack() const;
 #ifndef QT_NO_UNDOGROUP
-    KUndoGroup2 *group() const;
+    KUndo2Group *group() const;
 #endif
 
     void setEmptyLabel(const QString &label);
@@ -101,14 +101,14 @@ public:
 //    void setCanvas(KisCanvas2* canvas);
 
 public Q_SLOTS:
-    void setStack(KUndoStack2 *stack);
+    void setStack(KUndo2Stack *stack);
 #ifndef QT_NO_UNDOGROUP
-    void setGroup(KUndoGroup2 *group);
+    void setGroup(KUndo2Group *group);
 #endif
 
 private:
     KUndoView2Private* const d;
-    Q_DISABLE_COPY(KUndoView2)
+    Q_DISABLE_COPY(KUndo2View)
 };
 
 #endif // QT_NO_UNDOVIEW
