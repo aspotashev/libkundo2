@@ -68,7 +68,7 @@
 #ifndef QT_NO_UNDOVIEW
 
 class KUndo2ViewPrivate;
-class KUndo2Stack;
+class KUndo2QStack;
 class KUndo2Group;
 class QIcon;
 
@@ -80,13 +80,13 @@ class KUNDO2_EXPORT KUndo2View : public QListView
 
 public:
     explicit KUndo2View(QWidget *parent = 0);
-    explicit KUndo2View(KUndo2Stack *stack, QWidget *parent = 0);
+    explicit KUndo2View(KUndo2QStack *stack, QWidget *parent = 0);
 #ifndef QT_NO_UNDOGROUP
     explicit KUndo2View(KUndo2Group *group, QWidget *parent = 0);
 #endif
     ~KUndo2View();
 
-    KUndo2Stack *stack() const;
+    KUndo2QStack *stack() const;
 #ifndef QT_NO_UNDOGROUP
     KUndo2Group *group() const;
 #endif
@@ -101,7 +101,7 @@ public:
 //    void setCanvas(KisCanvas2* canvas);
 
 public Q_SLOTS:
-    void setStack(KUndo2Stack *stack);
+    void setStack(KUndo2QStack *stack);
 #ifndef QT_NO_UNDOGROUP
     void setGroup(KUndo2Group *group);
 #endif

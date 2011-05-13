@@ -73,12 +73,12 @@ QItemSelectionModel *KUndo2Model::selectionModel() const
     return m_sel_model;
 }
 
-KUndo2Stack *KUndo2Model::stack() const
+KUndo2QStack *KUndo2Model::stack() const
 {
     return m_stack;
 }
 
-void KUndo2Model::setStack(KUndo2Stack *stack)
+void KUndo2Model::setStack(KUndo2QStack *stack)
 {
     if (m_stack == stack)
         return;

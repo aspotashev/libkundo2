@@ -73,7 +73,7 @@ class KUndo2Model : public QAbstractItemModel
 public:
     KUndo2Model(QObject *parent = 0);
 
-    KUndo2Stack *stack() const;
+    KUndo2QStack *stack() const;
 
     virtual QModelIndex index(int row, int column,
     const QModelIndex &parent = QModelIndex()) const;
@@ -94,7 +94,7 @@ public:
 //    void setCanvas(KisCanvas2* canvas);
 
 public slots:
-    void setStack(KUndo2Stack *stack);
+    void setStack(KUndo2QStack *stack);
 //    void addImage(int idx);
 
 private slots:
@@ -103,7 +103,7 @@ private slots:
     void setStackCurrentIndex(const QModelIndex &index);
 
 private:
-    KUndo2Stack *m_stack;
+    KUndo2QStack *m_stack;
     QItemSelectionModel *m_sel_model;
     QString m_emty_label;
     QIcon m_clean_icon;

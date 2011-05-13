@@ -48,7 +48,7 @@
 #include "kundo2_export.h"
 
 class KUndo2GroupPrivate;
-class KUndo2Stack;
+class KUndo2QStack;
 class QAction;
 
 #ifndef QT_NO_UNDOGROUP
@@ -62,10 +62,10 @@ public:
     explicit KUndo2Group(QObject *parent = 0);
     ~KUndo2Group();
 
-    void addStack(KUndo2Stack *stack);
-    void removeStack(KUndo2Stack *stack);
-    QList<KUndo2Stack*> stacks() const;
-    KUndo2Stack *activeStack() const;
+    void addStack(KUndo2QStack *stack);
+    void removeStack(KUndo2QStack *stack);
+    QList<KUndo2QStack*> stacks() const;
+    KUndo2QStack *activeStack() const;
 
 #ifndef QT_NO_ACTION
     QAction *createUndoAction(QObject *parent) const;
@@ -80,10 +80,10 @@ public:
 public Q_SLOTS:
     void undo();
     void redo();
-    void setActiveStack(KUndo2Stack *stack);
+    void setActiveStack(KUndo2QStack *stack);
 
 Q_SIGNALS:
-    void activeStackChanged(KUndo2Stack *stack);
+    void activeStackChanged(KUndo2QStack *stack);
     void indexChanged(int idx);
     void cleanChanged(bool clean);
     void canUndoChanged(bool canUndo);
@@ -93,8 +93,8 @@ Q_SIGNALS:
 
 private:
     // from QUndoGroupPrivate
-    KUndo2Stack *m_active;
-    QList<KUndo2Stack*> m_stack_list;
+    KUndo2QStack *m_active;
+    QList<KUndo2QStack*> m_stack_list;
 
     Q_DISABLE_COPY(KUndo2Group)
 };

@@ -80,23 +80,23 @@ public:
 
 private:
     Q_DISABLE_COPY(KUndo2Command)
-    friend class KUndo2Stack;
+    friend class KUndo2QStack;
 };
 
 #endif // QT_NO_UNDOCOMMAND
 
 #ifndef QT_NO_UNDOSTACK
 
-class KUNDO2_EXPORT KUndo2Stack : public QObject
+class KUNDO2_EXPORT KUndo2QStack : public QObject
 {
     Q_OBJECT
-//    Q_DECLARE_PRIVATE(KUndo2Stack)
+//    Q_DECLARE_PRIVATE(KUndo2QStack)
     Q_PROPERTY(bool active READ isActive WRITE setActive)
     Q_PROPERTY(int undoLimit READ undoLimit WRITE setUndoLimit)
 
 public:
-    explicit KUndo2Stack(QObject *parent = 0);
-    ~KUndo2Stack();
+    explicit KUndo2QStack(QObject *parent = 0);
+    ~KUndo2QStack();
     void clear();
 
     void push(KUndo2Command *cmd);
@@ -160,16 +160,16 @@ private:
     void setIndex(int idx, bool clean);
     bool checkUndoLimit();
 
-    Q_DISABLE_COPY(KUndo2Stack)
+    Q_DISABLE_COPY(KUndo2QStack)
     friend class KUndo2Group;
 };
 
 // HACK!!! (inheritance in the wrong direction)
 // Cross your fingers that nobody feels the difference ;)
-class KUNDO2_EXPORT KUndo2QStack : public KUndo2Stack
+class KUNDO2_EXPORT KUndo2Stack : public KUndo2QStack
 {
 public:
-	explicit KUndo2QStack(QObject *parent = 0);
+	explicit KUndo2Stack(QObject *parent = 0);
 };
 
 #endif // QT_NO_UNDOSTACK

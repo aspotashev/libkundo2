@@ -71,14 +71,14 @@
 
 /*!
     \class KUndo2View
-    \brief The KUndo2View class displays the contents of a KUndo2Stack.
+    \brief The KUndo2View class displays the contents of a KUndo2QStack.
     \since 4.2
 
     \ingroup advanced
 
     KUndo2View is a QListView which displays the list of commands pushed on an undo stack.
     The most recently executed command is always selected. Selecting a different command
-    results in a call to KUndo2Stack::setIndex(), rolling the state of the document
+    results in a call to KUndo2QStack::setIndex(), rolling the state of the document
     backwards or forward to the new command.
 
     The stack can be set explicitly with setStack(). Alternatively, a QUndoGroup object can
@@ -127,7 +127,7 @@ KUndo2View::KUndo2View(QWidget *parent) : QListView(parent), d(new KUndo2ViewPri
     Constructs a new view with parent \a parent and sets the observed stack to \a stack.
 */
 
-KUndo2View::KUndo2View(KUndo2Stack *stack, QWidget *parent) : QListView(parent), d(new KUndo2ViewPrivate)
+KUndo2View::KUndo2View(KUndo2QStack *stack, QWidget *parent) : QListView(parent), d(new KUndo2ViewPrivate)
 {
     d->init(this);
     setStack(stack);
@@ -164,7 +164,7 @@ KUndo2View::~KUndo2View() {
     \sa setStack() setGroup()
 */
 
-KUndo2Stack *KUndo2View::stack() const
+KUndo2QStack *KUndo2View::stack() const
 {
 
     return d->model->stack();
@@ -179,7 +179,7 @@ KUndo2Stack *KUndo2View::stack() const
     \sa stack() setGroup()
 */
 
-void KUndo2View::setStack(KUndo2Stack *stack)
+void KUndo2View::setStack(KUndo2QStack *stack)
 {
 
 #ifndef QT_NO_UNDOGROUP
@@ -207,16 +207,16 @@ void KUndo2View::setGroup(KUndo2Group *group)
         return;
 
     if (d->group != 0) {
-        disconnect(d->group, SIGNAL(activeStackChanged(KUndo2Stack*)),
-                d->model, SLOT(setStack(KUndo2Stack*)));
+        disconnect(d->group, SIGNAL(activeStackChanged(KUndo2QStack*)),
+                d->model, SLOT(setStack(KUndo2QStack*)));
     }
 
     d->group = group;
 
     if (d->group != 0) {
-        connect(d->group, SIGNAL(activeStackChanged(KUndo2Stack*)),
-                d->model, SLOT(setStack(KUndo2Stack*)));
-        d->model->setStack((KUndo2Stack *)d->group->activeStack());
+        connect(d->group, SIGNAL(activeStackChanged(KUndo2QStack*)),
+                d->model, SLOT(setStack(KUndo2QStack*)));
+        d->model->setStack((KUndo2QStack *)d->group->activeStack());
     } else {
         d->model->setStack(0);
     }
@@ -263,7 +263,7 @@ QString KUndo2View::emptyLabel() const
     \property KUndo2View::cleanIcon
     \brief the icon used to represent the clean state.
 
-    A stack may have a clean state set with KUndo2Stack::setClean(). This is usually
+    A stack may have a clean state set with KUndo2QStack::setClean(). This is usually
     the state of the document at the point it was saved. KUndo2View can display an
     icon in the list of commands to show the clean state. If this property is
     a null icon, no icon is shown. The default value is the null icon.

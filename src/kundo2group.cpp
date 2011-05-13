@@ -48,7 +48,7 @@
 
 /*!
     \class KUndo2Group
-    \brief The KUndo2Group class is a group of KUndo2Stack objects.
+    \brief The KUndo2Group class is a group of KUndo2QStack objects.
     \since 4.2
 
     For an overview of the Qt's undo framework, see the
@@ -58,11 +58,11 @@
     same time, an application usually has one undo action and one redo action, which
     triggers undo or redo in the active document.
 
-    KUndo2Group is a group of KUndo2Stack objects, one of which may be active. It has
-    an undo() and redo() slot, which calls KUndo2Stack::undo() and KUndo2Stack::redo()
+    KUndo2Group is a group of KUndo2QStack objects, one of which may be active. It has
+    an undo() and redo() slot, which calls KUndo2QStack::undo() and KUndo2QStack::redo()
     for the active stack. It also has the functions createUndoAction() and createRedoAction().
     The actions returned by these functions behave in the same way as those returned by
-    KUndo2Stack::createUndoAction() and KUndo2Stack::createRedoAction() of the active
+    KUndo2QStack::createUndoAction() and KUndo2QStack::createRedoAction() of the active
     stack.
 
     Stacks are added to a group with addStack() and removed with removeStack(). A stack
@@ -70,7 +70,7 @@
     QObject.
 
     It is the programmer's responsibility to specify which stack is active by
-    calling KUndo2Stack::setActive(), usually when the associated document window receives focus.
+    calling KUndo2QStack::setActive(), usually when the associated document window receives focus.
     The active stack may also be set with setActiveStack(), and is returned by activeStack().
 
     When a stack is added to a group using addStack(), the group does not take ownership
@@ -101,8 +101,8 @@ KUndo2Group::KUndo2Group(QObject *parent)
 KUndo2Group::~KUndo2Group()
 {
     // Ensure all KUndo2Stacks no longer refer to this group.
-    QList<KUndo2Stack *>::iterator it = m_stack_list.begin();
-    QList<KUndo2Stack *>::iterator end = m_stack_list.end();
+    QList<KUndo2QStack *>::iterator it = m_stack_list.begin();
+    QList<KUndo2QStack *>::iterator end = m_stack_list.end();
     while (it != end) {
         (*it)->m_group = 0;
         ++it;
@@ -112,13 +112,13 @@ KUndo2Group::~KUndo2Group()
 /*!
     Adds \a stack to this group. The group does not take ownership of the stack. Another
     way of adding a stack to a group is by specifying the group as the stack's parent
-    QObject in KUndo2Stack::KUndo2Stack(). In this case, the stack is deleted when the
+    QObject in KUndo2QStack::KUndo2QStack(). In this case, the stack is deleted when the
     group is deleted, in the usual manner of QObjects.
 
-    \sa removeStack() stacks() KUndo2Stack::KUndo2Stack()
+    \sa removeStack() stacks() KUndo2QStack::KUndo2QStack()
 */
 
-void KUndo2Group::addStack(KUndo2Stack *stack)
+void KUndo2Group::addStack(KUndo2QStack *stack)
 {
     if (m_stack_list.contains(stack))
         return;
@@ -133,10 +133,10 @@ void KUndo2Group::addStack(KUndo2Stack *stack)
     Removes \a stack from this group. If the stack was the active stack in the group,
     the active stack becomes 0.
 
-    \sa addStack() stacks() KUndo2Stack::~KUndo2Stack()
+    \sa addStack() stacks() KUndo2QStack::~KUndo2QStack()
 */
 
-void KUndo2Group::removeStack(KUndo2Stack *stack)
+void KUndo2Group::removeStack(KUndo2QStack *stack)
 {
     if (m_stack_list.removeAll(stack) == 0)
         return;
@@ -151,7 +151,7 @@ void KUndo2Group::removeStack(KUndo2Stack *stack)
     \sa addStack() removeStack()
 */
 
-QList<KUndo2Stack*> KUndo2Group::stacks() const
+QList<KUndo2QStack*> KUndo2Group::stacks() const
 {
     return m_stack_list;
 }
@@ -161,16 +161,16 @@ QList<KUndo2Stack*> KUndo2Group::stacks() const
 
     If the stack is not a member of this group, this function does nothing.
 
-    Synonymous with calling KUndo2Stack::setActive() on \a stack.
+    Synonymous with calling KUndo2QStack::setActive() on \a stack.
 
     The actions returned by createUndoAction() and createRedoAction() will now behave
-    in the same way as those returned by \a stack's KUndo2Stack::createUndoAction()
-    and KUndo2Stack::createRedoAction().
+    in the same way as those returned by \a stack's KUndo2QStack::createUndoAction()
+    and KUndo2QStack::createRedoAction().
 
-    \sa KUndo2Stack::setActive() activeStack()
+    \sa KUndo2QStack::setActive() activeStack()
 */
 
-void KUndo2Group::setActiveStack(KUndo2Stack *stack)
+void KUndo2Group::setActiveStack(KUndo2QStack *stack)
 {
     if (m_active == stack)
         return;
@@ -229,16 +229,16 @@ void KUndo2Group::setActiveStack(KUndo2Stack *stack)
     If none of the stacks are active, or if the group is empty, this function
     returns 0.
 
-    \sa setActiveStack() KUndo2Stack::setActive()
+    \sa setActiveStack() KUndo2QStack::setActive()
 */
 
-KUndo2Stack *KUndo2Group::activeStack() const
+KUndo2QStack *KUndo2Group::activeStack() const
 {
     return m_active;
 }
 
 /*!
-    Calls KUndo2Stack::undo() on the active stack.
+    Calls KUndo2QStack::undo() on the active stack.
 
     If none of the stacks are active, or if the group is empty, this function
     does nothing.
@@ -253,7 +253,7 @@ void KUndo2Group::undo()
 }
 
 /*!
-    Calls KUndo2Stack::redo() on the active stack.
+    Calls KUndo2QStack::redo() on the active stack.
 
     If none of the stacks are active, or if the group is empty, this function
     does nothing.
@@ -269,7 +269,7 @@ void KUndo2Group::redo()
 }
 
 /*!
-    Returns the value of the active stack's KUndo2Stack::canUndo().
+    Returns the value of the active stack's KUndo2QStack::canUndo().
 
     If none of the stacks are active, or if the group is empty, this function
     returns false.
@@ -283,7 +283,7 @@ bool KUndo2Group::canUndo() const
 }
 
 /*!
-    Returns the value of the active stack's KUndo2Stack::canRedo().
+    Returns the value of the active stack's KUndo2QStack::canRedo().
 
     If none of the stacks are active, or if the group is empty, this function
     returns false.
@@ -297,7 +297,7 @@ bool KUndo2Group::canRedo() const
 }
 
 /*!
-    Returns the value of the active stack's KUndo2Stack::undoActionText().
+    Returns the value of the active stack's KUndo2QStack::undoActionText().
 
     If none of the stacks are active, or if the group is empty, this function
     returns an empty string.
@@ -311,7 +311,7 @@ QString KUndo2Group::undoText() const
 }
 
 /*!
-    Returns the value of the active stack's KUndo2Stack::redoActionText().
+    Returns the value of the active stack's KUndo2QStack::redoActionText().
 
     If none of the stacks are active, or if the group is empty, this function
     returns an empty string.
@@ -325,7 +325,7 @@ QString KUndo2Group::redoText() const
 }
 
 /*!
-    Returns the value of the active stack's KUndo2Stack::isClean().
+    Returns the value of the active stack's KUndo2QStack::isClean().
 
     If none of the stacks are active, or if the group is empty, this function
     returns true.
@@ -343,7 +343,7 @@ bool KUndo2Group::isClean() const
 /*!
     Creates an undo QAction object with parent \a parent.
 
-    Triggering this action will cause a call to KUndo2Stack::undo() on the active stack.
+    Triggering this action will cause a call to KUndo2QStack::undo() on the active stack.
     The text of this action will always be the text of the command which will be undone
     in the next call to undo(), prefixed by \a prefix. If there is no command available
     for undo, if the group is empty or if none of the stacks are active, this action will
@@ -370,7 +370,7 @@ QAction *KUndo2Group::createUndoAction(QObject *parent) const
 /*!
     Creates an redo QAction object with parent \a parent.
 
-    Triggering this action will cause a call to KUndo2Stack::redo() on the active stack.
+    Triggering this action will cause a call to KUndo2QStack::redo() on the active stack.
     The text of this action will always be the text of the command which will be redone
     in the next call to redo(), prefixed by \a prefix. If there is no command available
     for redo, if the group is empty or if none of the stacks are active, this action will
@@ -396,74 +396,74 @@ QAction *KUndo2Group::createRedoAction(QObject *parent) const
 
 #endif // QT_NO_ACTION
 
-/*! \fn void KUndo2Group::activeStackChanged(KUndo2Stack *stack)
+/*! \fn void KUndo2Group::activeStackChanged(KUndo2QStack *stack)
 
     This signal is emitted whenever the active stack of the group changes. This can happen
-    when setActiveStack() or KUndo2Stack::setActive() is called, or when the active stack
+    when setActiveStack() or KUndo2QStack::setActive() is called, or when the active stack
     is removed form the group. \a stack is the new active stack. If no stack is active,
     \a stack is 0.
 
-    \sa setActiveStack() KUndo2Stack::setActive()
+    \sa setActiveStack() KUndo2QStack::setActive()
 */
 
 /*! \fn void KUndo2Group::indexChanged(int idx)
 
-    This signal is emitted whenever the active stack emits KUndo2Stack::indexChanged()
+    This signal is emitted whenever the active stack emits KUndo2QStack::indexChanged()
     or the active stack changes.
 
     \a idx is the new current index, or 0 if the active stack is 0.
 
-    \sa KUndo2Stack::indexChanged() setActiveStack()
+    \sa KUndo2QStack::indexChanged() setActiveStack()
 */
 
 /*! \fn void KUndo2Group::cleanChanged(bool clean)
 
-    This signal is emitted whenever the active stack emits KUndo2Stack::cleanChanged()
+    This signal is emitted whenever the active stack emits KUndo2QStack::cleanChanged()
     or the active stack changes.
 
     \a clean is the new state, or true if the active stack is 0.
 
-    \sa KUndo2Stack::cleanChanged() setActiveStack()
+    \sa KUndo2QStack::cleanChanged() setActiveStack()
 */
 
 /*! \fn void KUndo2Group::canUndoChanged(bool canUndo)
 
-    This signal is emitted whenever the active stack emits KUndo2Stack::canUndoChanged()
+    This signal is emitted whenever the active stack emits KUndo2QStack::canUndoChanged()
     or the active stack changes.
 
     \a canUndo is the new state, or false if the active stack is 0.
 
-    \sa KUndo2Stack::canUndoChanged() setActiveStack()
+    \sa KUndo2QStack::canUndoChanged() setActiveStack()
 */
 
 /*! \fn void KUndo2Group::canRedoChanged(bool canRedo)
 
-    This signal is emitted whenever the active stack emits KUndo2Stack::canRedoChanged()
+    This signal is emitted whenever the active stack emits KUndo2QStack::canRedoChanged()
     or the active stack changes.
 
     \a canRedo is the new state, or false if the active stack is 0.
 
-    \sa KUndo2Stack::canRedoChanged() setActiveStack()
+    \sa KUndo2QStack::canRedoChanged() setActiveStack()
 */
 
 /*! \fn void KUndo2Group::undoTextChanged(const QString &undoText)
 
-    This signal is emitted whenever the active stack emits KUndo2Stack::undoTextChanged()
+    This signal is emitted whenever the active stack emits KUndo2QStack::undoTextChanged()
     or the active stack changes.
 
     \a undoText is the new state, or an empty string if the active stack is 0.
 
-    \sa KUndo2Stack::undoTextChanged() setActiveStack()
+    \sa KUndo2QStack::undoTextChanged() setActiveStack()
 */
 
 /*! \fn void KUndo2Group::redoTextChanged(const QString &redoText)
 
-    This signal is emitted whenever the active stack emits KUndo2Stack::redoTextChanged()
+    This signal is emitted whenever the active stack emits KUndo2QStack::redoTextChanged()
     or the active stack changes.
 
     \a redoText is the new state, or an empty string if the active stack is 0.
 
-    \sa KUndo2Stack::redoTextChanged() setActiveStack()
+    \sa KUndo2QStack::redoTextChanged() setActiveStack()
 */
 
 #endif // QT_NO_UNDOGROUP
