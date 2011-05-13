@@ -1,5 +1,7 @@
 #!/bin/sh
 
+TEMPFILE=$(tempfile)
+
 # Unlike 'sed -i ...', this does not touch the file if there were no
 # changes in it. Touching a file leads to its recompilation by CMake/Make.
 #
@@ -7,14 +9,11 @@
 # $2 -- file
 function sed_i()
 {
-	TEMPFILE=$(tempfile)
 	sed "$1" "$2" > "$TEMPFILE"
 	DIFF=$(diff "$2" "$TEMPFILE")
 	if test -n "$DIFF"
 	then
 		mv "$TEMPFILE" "$2"
-	else
-		rm "$TEMPFILE"
 	fi
 }
 
@@ -52,4 +51,6 @@ do
 	sed_i "s/QUndoStack\b/KUndo2QStack/g" "$fn"
 	sed_i "s/QUndoGroup\b/KUndo2Group/g" "$fn"
 done
+
+rm -f "$TEMPFILE"
 
