@@ -13,9 +13,9 @@ function sed_i()
 	if test -n "$DIFF"
 	then
 		mv "$TEMPFILE" "$2"
+	else
+		rm "$TEMPFILE"
 	fi
-
-	rm "$TEMPFILE"
 }
 
 for fn in `find -name '*.c' -o -name '*.cpp' -o -name '*.cc' -o -name '*.h'`
