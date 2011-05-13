@@ -1,0 +1,8 @@
+== FORWARD PORTING ==
+1. add "kundo2" to target_link_libraries() in CMakeLists.txt
+2. run ./forward-port.sh
+
+== BACKWARD PORTING ==
+1. remove "kundo2" from target_link_libraries() in CMakeLists.txt
+2. run ./backward-port.sh
+
