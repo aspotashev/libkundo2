@@ -44,9 +44,9 @@
 #include <kstandardaction.h>
 #include <kicon.h>
 #include <kactioncollection.h>
-#include "kundostack2.h"
-#include "kundostack2_p.h"
-#include "kundogroup2.h"
+#include "kundo2stack.h"
+#include "kundo2stack_p.h"
+#include "kundo2group.h"
 
 #ifndef QT_NO_UNDOCOMMAND
 
@@ -113,7 +113,7 @@
 
 KUndo2Command::KUndo2Command(const QString &text, KUndo2Command *parent)
 {
-    d = new KUndoCommand2Private;
+    d = new KUndo2CommandPrivate;
     if (parent != 0)
         parent->d->child_list.append(this);
     setText(text);
@@ -131,7 +131,7 @@ KUndo2Command::KUndo2Command(const QString &text, KUndo2Command *parent)
 
 KUndo2Command::KUndo2Command(KUndo2Command *parent)
 {
-    d = new KUndoCommand2Private;
+    d = new KUndo2CommandPrivate;
     if (parent != 0)
         parent->d->child_list.append(this);
 }
@@ -393,14 +393,14 @@ const KUndo2Command *KUndo2Command::child(int index) const
 
 #ifndef QT_NO_ACTION
 
-KUndoAction2::KUndoAction2(const QString &textTemplate, const QString &defaultText, QObject *parent)
+KUndo2Action::KUndo2Action(const QString &textTemplate, const QString &defaultText, QObject *parent)
     : QAction(parent)
 {
     m_textTemplate = textTemplate;
     m_defaultText = defaultText;
 }
 
-void KUndoAction2::setPrefixedText(const QString &text)
+void KUndo2Action::setPrefixedText(const QString &text)
 {
     if (text.isEmpty())
         setText(m_defaultText);
@@ -838,7 +838,7 @@ QString KUndo2Stack::redoText() const
 
 QAction *KUndo2Stack::createUndoAction(QObject *parent) const
 {
-    KUndoAction2 *result = new KUndoAction2(i18n("Undo %1"), i18nc("Default text for undo action", "Undo"), parent);
+    KUndo2Action *result = new KUndo2Action(i18n("Undo %1"), i18nc("Default text for undo action", "Undo"), parent);
     result->setEnabled(canUndo());
     result->setPrefixedText(undoText());
     connect(this, SIGNAL(canUndoChanged(bool)),
@@ -864,7 +864,7 @@ QAction *KUndo2Stack::createUndoAction(QObject *parent) const
 
 QAction *KUndo2Stack::createRedoAction(QObject *parent) const
 {
-    KUndoAction2 *result = new KUndoAction2(i18n("Redo %1"), i18nc("Default text for redo action", "Redo"), parent);
+    KUndo2Action *result = new KUndo2Action(i18n("Redo %1"), i18nc("Default text for redo action", "Redo"), parent);
     result->setEnabled(canRedo());
     result->setPrefixedText(redoText());
     connect(this, SIGNAL(canRedoChanged(bool)),

@@ -39,9 +39,9 @@
 **
 ****************************************************************************/
 
-#include "kundogroup2.h"
-#include "kundostack2.h"
-#include "kundostack2_p.h"
+#include "kundo2group.h"
+#include "kundo2stack.h"
+#include "kundo2stack_p.h"
 #include <KDE/KLocale>
 
 #ifndef QT_NO_UNDOGROUP
@@ -100,7 +100,7 @@ KUndo2Group::KUndo2Group(QObject *parent)
 */
 KUndo2Group::~KUndo2Group()
 {
-    // Ensure all KUndoStack2s no longer refer to this group.
+    // Ensure all KUndo2Stacks no longer refer to this group.
     QList<KUndo2Stack *>::iterator it = m_stack_list.begin();
     QList<KUndo2Stack *>::iterator end = m_stack_list.end();
     while (it != end) {
@@ -356,7 +356,7 @@ bool KUndo2Group::isClean() const
 
 QAction *KUndo2Group::createUndoAction(QObject *parent) const
 {
-    KUndoAction2 *result = new KUndoAction2(i18n("Undo %1"), i18nc("Default text for undo action", "Undo"), parent);
+    KUndo2Action *result = new KUndo2Action(i18n("Undo %1"), i18nc("Default text for undo action", "Undo"), parent);
     result->setEnabled(canUndo());
     result->setPrefixedText(undoText());
     connect(this, SIGNAL(canUndoChanged(bool)),
@@ -383,7 +383,7 @@ QAction *KUndo2Group::createUndoAction(QObject *parent) const
 
 QAction *KUndo2Group::createRedoAction(QObject *parent) const
 {
-    KUndoAction2 *result = new KUndoAction2(i18n("Redo %1"), i18nc("Default text for redo action", "Redo"), parent);
+    KUndo2Action *result = new KUndo2Action(i18n("Redo %1"), i18nc("Default text for redo action", "Redo"), parent);
     result->setEnabled(canRedo());
     result->setPrefixedText(redoText());
     connect(this, SIGNAL(canRedoChanged(bool)),

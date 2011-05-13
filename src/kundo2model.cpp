@@ -56,9 +56,9 @@
 ** $QT_END_LICENSE$
 **
 ****************************************************************************/
-#include "kundomodel2.h"
+#include "kundo2model.h"
 
-KUndoModel2::KUndoModel2(QObject *parent)
+KUndo2Model::KUndo2Model(QObject *parent)
     : QAbstractItemModel(parent)
 {
     m_stack = 0;
@@ -68,17 +68,17 @@ KUndoModel2::KUndoModel2(QObject *parent)
     m_emty_label = tr("<empty>");
 }
 
-QItemSelectionModel *KUndoModel2::selectionModel() const
+QItemSelectionModel *KUndo2Model::selectionModel() const
 {
     return m_sel_model;
 }
 
-KUndo2Stack *KUndoModel2::stack() const
+KUndo2Stack *KUndo2Model::stack() const
 {
     return m_stack;
 }
 
-void KUndoModel2::setStack(KUndo2Stack *stack)
+void KUndo2Model::setStack(KUndo2Stack *stack)
 {
     if (m_stack == stack)
         return;
@@ -100,7 +100,7 @@ void KUndoModel2::setStack(KUndo2Stack *stack)
     stackChanged();
 }
 
-void KUndoModel2::stackDestroyed(QObject *obj)
+void KUndo2Model::stackDestroyed(QObject *obj)
 {
     if (obj != m_stack)
         return;
@@ -109,13 +109,13 @@ void KUndoModel2::stackDestroyed(QObject *obj)
     stackChanged();
 }
 
-void KUndoModel2::stackChanged()
+void KUndo2Model::stackChanged()
 {
     reset();
     m_sel_model->setCurrentIndex(selectedIndex(), QItemSelectionModel::ClearAndSelect);
 }
 
-void KUndoModel2::setStackCurrentIndex(const QModelIndex &index)
+void KUndo2Model::setStackCurrentIndex(const QModelIndex &index)
 {
     if (m_stack == 0)
         return;
@@ -129,12 +129,12 @@ void KUndoModel2::setStackCurrentIndex(const QModelIndex &index)
     m_stack->setIndex(index.row());
 }
 
-QModelIndex KUndoModel2::selectedIndex() const
+QModelIndex KUndo2Model::selectedIndex() const
 {
     return m_stack == 0 ? QModelIndex() : createIndex(m_stack->index(), 0);
 }
 
-QModelIndex KUndoModel2::index(int row, int column, const QModelIndex &parent) const
+QModelIndex KUndo2Model::index(int row, int column, const QModelIndex &parent) const
 {
     if (m_stack == 0)
         return QModelIndex();
@@ -151,12 +151,12 @@ QModelIndex KUndoModel2::index(int row, int column, const QModelIndex &parent) c
     return createIndex(row, column);
 }
 
-QModelIndex KUndoModel2::parent(const QModelIndex&) const
+QModelIndex KUndo2Model::parent(const QModelIndex&) const
 {
     return QModelIndex();
 }
 
-int KUndoModel2::rowCount(const QModelIndex &parent) const
+int KUndo2Model::rowCount(const QModelIndex &parent) const
 {
     if (m_stack == 0)
         return 0;
@@ -167,12 +167,12 @@ int KUndoModel2::rowCount(const QModelIndex &parent) const
     return m_stack->count() + 1;
 }
 
-int KUndoModel2::columnCount(const QModelIndex&) const
+int KUndo2Model::columnCount(const QModelIndex&) const
 {
     return 1;
 }
 
-QVariant KUndoModel2::data(const QModelIndex &index, int role) const
+QVariant KUndo2Model::data(const QModelIndex &index, int role) const
 {
     if (m_stack == 0)
         return QVariant();
@@ -197,33 +197,33 @@ QVariant KUndoModel2::data(const QModelIndex &index, int role) const
     return QVariant();
 }
 
-QString KUndoModel2::emptyLabel() const
+QString KUndo2Model::emptyLabel() const
 {
     return m_emty_label;
 }
 
-void KUndoModel2::setEmptyLabel(const QString &label)
+void KUndo2Model::setEmptyLabel(const QString &label)
 {
     m_emty_label = label;
     stackChanged();
 }
 
-void KUndoModel2::setCleanIcon(const QIcon &icon)
+void KUndo2Model::setCleanIcon(const QIcon &icon)
 {
     m_clean_icon = icon;
     stackChanged();
 }
 
-QIcon KUndoModel2::cleanIcon() const
+QIcon KUndo2Model::cleanIcon() const
 {
     return m_clean_icon;
 }
 
-//void KUndoModel2::setCanvas(KisCanvas2 *canvas) {
+//void KUndo2Model::setCanvas(KisCanvas2 *canvas) {
 //    m_canvas = canvas;
 //}
 
-/*void KUndoModel2::addImage(int idx) {
+/*void KUndo2Model::addImage(int idx) {
     if(m_stack == 0 || m_stack->count() == 0) {
         return;
     }

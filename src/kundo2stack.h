@@ -39,8 +39,8 @@
 **
 ****************************************************************************/
 
-#ifndef KUNDOSTACK2_H
-#define KUNDOSTACK2_H
+#ifndef KUNDO2STACK_H
+#define KUNDO2STACK_H
 
 #include <QtCore/qobject.h>
 #include <QtCore/qstring.h>
@@ -50,7 +50,7 @@
 #include "kundo2_export.h"
 
 class QAction;
-class KUndoCommand2Private;
+class KUndo2CommandPrivate;
 class KUndo2Group;
 class KActionCollection;
 
@@ -58,7 +58,7 @@ class KActionCollection;
 
 class KUNDO2_EXPORT KUndo2Command
 {
-    KUndoCommand2Private *d;
+    KUndo2CommandPrivate *d;
 
 public:
     explicit KUndo2Command(KUndo2Command *parent = 0);
@@ -166,4 +166,4 @@ private:
 
 #endif // QT_NO_UNDOSTACK
 
-#endif // KUNDOSTACK2_H
+#endif // KUNDO2STACK_H

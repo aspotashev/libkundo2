@@ -56,10 +56,10 @@
 ** $QT_END_LICENSE$
 **
 ****************************************************************************/
-#include "kundostack2.h"
-#include "kundoview2.h"
-#include "kundomodel2.h"
-#include "kundogroup2.h"
+#include "kundo2stack.h"
+#include "kundo2view.h"
+#include "kundo2model.h"
+#include "kundo2group.h"
 
 #ifndef QT_NO_UNDOVIEW
 
@@ -88,10 +88,10 @@
     \image KUndo2View.png
 */
 
-class KUndoView2Private
+class KUndo2ViewPrivate
 {
 public:
-    KUndoView2Private() :
+    KUndo2ViewPrivate() :
 #ifndef QT_NO_UNDOGROUP
         group(0),
 #endif
@@ -100,16 +100,16 @@ public:
 #ifndef QT_NO_UNDOGROUP
     QPointer<KUndo2Group> group;
 #endif
-    KUndoModel2 *model;
+    KUndo2Model *model;
     KUndo2View* q;
 
     void init(KUndo2View* view);
 };
 
-void KUndoView2Private::init(KUndo2View* view)
+void KUndo2ViewPrivate::init(KUndo2View* view)
 {
     q = view;
-    model = new KUndoModel2(q);
+    model = new KUndo2Model(q);
     q->setModel(model);
     q->setSelectionModel(model->selectionModel());
 }
@@ -118,7 +118,7 @@ void KUndoView2Private::init(KUndo2View* view)
     Constructs a new view with parent \a parent.
 */
 
-KUndo2View::KUndo2View(QWidget *parent) : QListView(parent), d(new KUndoView2Private)
+KUndo2View::KUndo2View(QWidget *parent) : QListView(parent), d(new KUndo2ViewPrivate)
 {
     d->init(this);
 }
@@ -127,7 +127,7 @@ KUndo2View::KUndo2View(QWidget *parent) : QListView(parent), d(new KUndoView2Pri
     Constructs a new view with parent \a parent and sets the observed stack to \a stack.
 */
 
-KUndo2View::KUndo2View(KUndo2Stack *stack, QWidget *parent) : QListView(parent), d(new KUndoView2Private)
+KUndo2View::KUndo2View(KUndo2Stack *stack, QWidget *parent) : QListView(parent), d(new KUndo2ViewPrivate)
 {
     d->init(this);
     setStack(stack);
@@ -141,7 +141,7 @@ KUndo2View::KUndo2View(KUndo2Stack *stack, QWidget *parent) : QListView(parent),
     The view will update itself autmiatically whenever the active stack of the group changes.
 */
 
-KUndo2View::KUndo2View(KUndo2Group *group, QWidget *parent) : QListView(parent), d(new KUndoView2Private)
+KUndo2View::KUndo2View(KUndo2Group *group, QWidget *parent) : QListView(parent), d(new KUndo2ViewPrivate)
 {
     d->init(this);
     setGroup(group);
@@ -286,6 +286,6 @@ QIcon KUndo2View::cleanIcon() const
 //    d->model->setCanvas(canvas);
 //}
 
-#include "kundoview2.moc"
+#include "kundo2view.moc"
 
 #endif // QT_NO_UNDOVIEW

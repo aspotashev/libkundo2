@@ -58,7 +58,7 @@
 ****************************************************************************/
 #include <QAbstractItemModel>
 
-#include <kundostack2.h>
+#include "kundo2stack.h"
 #include <QItemSelectionModel>
 #include <QIcon>
 #include "kis_types.h"
@@ -67,11 +67,11 @@
 #include "kis_image.h"
 #include "kis_paint_device.h"
 
-class KUndoModel2 : public QAbstractItemModel
+class KUndo2Model : public QAbstractItemModel
 {
     Q_OBJECT
 public:
-    KUndoModel2(QObject *parent = 0);
+    KUndo2Model(QObject *parent = 0);
 
     KUndo2Stack *stack() const;
 

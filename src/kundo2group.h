@@ -39,15 +39,15 @@
 **
 ****************************************************************************/
 
-#ifndef KUNDOGROUP2_H
-#define KUNDOGROUP2_H
+#ifndef KUNDO2GROUP_H
+#define KUNDO2GROUP_H
 
 #include <QtCore/qobject.h>
 #include <QtCore/qstring.h>
 
 #include "kundo2_export.h"
 
-class KUndoGroup2Private;
+class KUndo2GroupPrivate;
 class KUndo2Stack;
 class QAction;
 
@@ -101,4 +101,4 @@ private:
 
 #endif // QT_NO_UNDOGROUP
 
-#endif // KUNDOGROUP2_H
+#endif // KUNDO2GROUP_H

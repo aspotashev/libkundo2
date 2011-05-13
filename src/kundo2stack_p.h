@@ -39,14 +39,14 @@
 **
 ****************************************************************************/
 
-#ifndef KUNDOSTACK2_P_H
-#define KUNDOSTACK2_P_H
+#ifndef KUNDO2STACK_P_H
+#define KUNDO2STACK_P_H
 
 #include <QtCore/qlist.h>
 #include <QtCore/qstring.h>
 #include <QtGui/qaction.h>
 
-#include "kundostack2.h"
+#include "kundo2stack.h"
 
 class KUndo2Command;
 class KUndo2Group;
@@ -62,10 +62,10 @@ class KUndo2Group;
 // We mean it.
 //
 
-class KUndoCommand2Private
+class KUndo2CommandPrivate
 {
 public:
-    KUndoCommand2Private() : id(-1) {}
+    KUndo2CommandPrivate() : id(-1) {}
     QList<KUndo2Command*> child_list;
     QString actionText;
     QString text;
@@ -75,11 +75,11 @@ public:
 #ifndef QT_NO_UNDOSTACK
 
 #ifndef QT_NO_ACTION
-class KUndoAction2 : public QAction
+class KUndo2Action : public QAction
 {
     Q_OBJECT
 public:
-    KUndoAction2(const QString &textTemplate, const QString &defaultText, QObject *parent = 0);
+    KUndo2Action(const QString &textTemplate, const QString &defaultText, QObject *parent = 0);
 public Q_SLOTS:
     void setPrefixedText(const QString &text);
 private:
@@ -89,4 +89,4 @@ private:
 #endif // QT_NO_ACTION
 
 #endif // QT_NO_UNDOSTACK
-#endif // KUNDOSTACK2_P_H
+#endif // KUNDO2STACK_P_H

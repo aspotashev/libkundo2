@@ -56,8 +56,8 @@
 ** $QT_END_LICENSE$
 **
 ****************************************************************************/
-#ifndef KUNDOVIEW2_H
-#define KUNDOVIEW2_H
+#ifndef KUNDO2VIEW_H
+#define KUNDO2VIEW_H
 
 #include <QtGui/qlistview.h>
 #include <QtCore/qstring.h>
@@ -67,7 +67,7 @@
 
 #ifndef QT_NO_UNDOVIEW
 
-class KUndoView2Private;
+class KUndo2ViewPrivate;
 class KUndo2Stack;
 class KUndo2Group;
 class QIcon;
@@ -107,9 +107,9 @@ public Q_SLOTS:
 #endif
 
 private:
-    KUndoView2Private* const d;
+    KUndo2ViewPrivate* const d;
     Q_DISABLE_COPY(KUndo2View)
 };
 
 #endif // QT_NO_UNDOVIEW
-#endif // KUNDOVIEW2_H
+#endif // KUNDO2VIEW_H
