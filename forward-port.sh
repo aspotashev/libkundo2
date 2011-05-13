@@ -19,17 +19,6 @@ function sed_i()
 
 for fn in `find -name '*.c' -o -name '*.cpp' -o -name '*.cc' -o -name '*.h'`
 do
-#	sed -i "s/#include <QUndoView>/#include <kundoview2.h>/g" "$fn"
-#	sed -i "s/#include <QUndoCommand>/#include <kundocommand2.h>/g" "$fn"
-#	sed -i "s/#include <QtGui\/QUndoCommand>/#include <kundocommand2.h>/g" "$fn"
-#	sed -i "s/#include <kundostack.h>/#include <kundostack2.h>/g" "$fn"
-#	sed -i "s/#include <KUndoStack>/#include <kundostack2.h>/g" "$fn"
-#
-#	sed -i "s/QUndoView\b/KUndoView2/g" "$fn"
-#	sed -i "s/QUndoCommand\b/KUndoCommand2/g" "$fn"
-#	sed -i "s/KUndoStack\b/KUndoStack2/g" "$fn"
-
-#-----------------
 	sed_i "s/#include <QUndoView>/#include <kundo2view.h>/g" "$fn"
 
 	sed_i "s/#include <QUndoCommand>/#include <kundo2command.h>/g" "$fn"
@@ -43,6 +32,7 @@ do
 
 	sed_i "s/#include <QUndoGroup>/#include <kundo2group.h>/g" "$fn"
 	sed_i "s/#include \"qundogroup\.h\"/#include <kundo2group.h>/g" "$fn"
+
 #-----------------
 
 	sed_i "s/QUndoView\b/KUndo2View/g" "$fn"
