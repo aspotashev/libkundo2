@@ -17,7 +17,7 @@ function sed_i()
 	fi
 }
 
-for fn in `find -name '*.c' -o -name '*.cpp' -o -name '*.cc' -o -name '*.h'`
+for fn in `find -name '*.c' -o -name '*.cpp' -o -name '*.cc' -o -name '*.h' | grep -v '^\./b/' | grep -v '^\./libs/kundo2/'`
 do
 	sed_i "s/#include <QUndoView>/#include <kundo2view.h>/g" "$fn"
 
