@@ -61,11 +61,6 @@
 #include "kundo2stack.h"
 #include <QItemSelectionModel>
 #include <QIcon>
-#include "kis_types.h"
-#include "kis_canvas2.h"
-#include "kis_view2.h"
-#include "kis_image.h"
-#include "kis_paint_device.h"
 
 class KUndo2Model : public QAbstractItemModel
 {
@@ -91,11 +86,8 @@ public:
     void setCleanIcon(const QIcon &icon);
     QIcon cleanIcon() const;
 
-//    void setCanvas(KisCanvas2* canvas);
-
 public slots:
     void setStack(KUndo2QStack *stack);
-//    void addImage(int idx);
 
 private slots:
     void stackChanged();
@@ -107,6 +99,4 @@ private:
     QItemSelectionModel *m_sel_model;
     QString m_emty_label;
     QIcon m_clean_icon;
-//    KisCanvas2* m_canvas;
-    QMap<const KUndo2Command*, QImage> imageMap;
 };

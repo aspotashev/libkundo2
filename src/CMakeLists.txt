@@ -22,7 +22,6 @@ install( FILES
 	kundo2view.h
 	kundo2model.h
 	kundo2command.h
-	kundo2_export.h
 	DESTINATION ${INCLUDE_INSTALL_DIR} COMPONENT Devel )
 
 install(TARGETS kundo2 ${INSTALL_TARGETS_DEFAULT_ARGS})
